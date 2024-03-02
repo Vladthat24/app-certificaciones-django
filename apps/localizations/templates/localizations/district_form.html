@@ -1,0 +1,72 @@
+{% extends 'dashboard.html' %}
+{% block  container %}
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-12 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Localización</li>
+                                <li class="breadcrumb-item active">Paises</li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url 'country:list' %}">Todos los paises</a></li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url  'country:department-list' country_id=country.id %}">Lista de
+                                        departamentos del {{ country.name }}</a></li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url  'department:province-list' department_id=department.id %}"> Lista
+                                        de provincias del departamento de {{ department.name }}</a></li>
+                                <li class="breadcrumb-item "><a
+                                        href="{% url  'province:district-list' province_id=province.id %}">
+                                    Lista de distritos de la Provincia de {{ province.name }}</a></li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}</h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <form id="father-form" class="text-left was-validated form-validate" method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            {% include 'includes/bs4_form.html' with form=form col=4 exclude=" " start_tabindex=0 hidden="province " %}
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="text-right">
+                                                <a href="{% url  'province:district-list' province_id=province.id %}"
+                                                   class="btn  btn-danger form-button">Cancelar</a>
+                                                <button type="submit" class="btn btn-success form-button">Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+        $(function () {
+            $("#id_province").val("{{ province.id }}")
+        })
+    </script>
+
+{% endblock static %}

@@ -1,0 +1,326 @@
+{% extends 'reporte_graficos/solicitud_reporte.html' %}
+{% block  detalle %}
+    <!-- Bar Chart -->
+    <h1>TOTAL: {{ total }}</h1>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">CUADRO DE NÚMERO DE AUTORIZACIONES SANITARIAS PARA CREMACIONES </h4>
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <table class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ITEM</th>
+                                    <th scope="col">DESCRIPCIÓN</th>
+                                    <th scope="col">COVID</th>
+                                    <th scope="col">NO COVID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for object in tabla_consolidado %}
+                                    <tr>
+                                        <th scope="row">{{ object.0 }}</th>
+                                        <td>{{ object.1 }}</td>
+                                        <td>{{ object.2 }}</td>
+                                        <td>{{ object.3 }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Column Chart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+{#                <div class="card-header">#}
+{#                    <h4 class="card-title">Column Chart</h4>#}
+{#                </div>#}
+                <div class="card-content collapse show">
+                    <div class="card-body">
+                        <canvas id="column-chart" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Solicitudes: Totales</h4>
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <canvas id="simple-pie-chart" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Solicitudes: Avance por tipo</h4>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body">
+                        <canvas id="bar-chart" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock detalle %}
+
+
+{% block static_detalle %}
+    <script>
+
+        // Bar chart
+        // ------------------------------
+        $(window).on("load", function () {
+            let autorizados = {{ autorizados|safe }};
+            let pendientes = {{ pendientes|safe }};
+
+            //Get the context of the Chart canvas element we want to select
+            var ctx = $("#bar-chart");
+
+            // Chart Options
+            var chartOptions = {
+                // Elements options apply to all of the options unless overridden in a dataset
+                // In this case, we are setting the border of each horizontal bar to be 2px wide and green
+                elements: {
+                    rectangle: {
+                        borderWidth: 2,
+                        borderColor: 'rgb(0, 255, 0)',
+                        borderSkipped: 'left'
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                responsiveAnimationDuration: 500,
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }]
+                },
+                title: {
+                    display: false,
+                    text: 'Chart.js Horizontal Bar Chart'
+                }
+            };
+
+            // Chart Data
+            var chartData = {
+                labels: ["Covid", "No Covid"],
+                datasets: [{
+                    label: "Autorizados",
+                    data: autorizados,
+                    backgroundColor: "#28D094",
+                    hoverBackgroundColor: "rgba(22,211,154,.9)",
+                    borderColor: "transparent"
+                }, {
+                    label: "Pendientes",
+                    data: pendientes,
+                    backgroundColor: "#F98E76",
+                    hoverBackgroundColor: "rgba(249,142,118,.9)",
+                    borderColor: "transparent"
+                }]
+            };
+
+            var config = {
+                type: 'horizontalBar',
+
+                // Chart Options
+                options: chartOptions,
+
+                data: chartData
+            };
+
+            // Create the chart
+            var lineChart = new Chart(ctx, config);
+        });
+    </script>
+
+
+    <script>
+
+        // Pie chart
+        // ------------------------------
+        $(window).on("load", function () {
+
+            let totales = {{ totales|safe }};
+
+            //Get the context of the Chart canvas element we want to select
+            var ctx = $("#simple-pie-chart");
+
+            // Chart Options
+            var chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                responsiveAnimationDuration: 500,
+                plugins: {
+                    legend: {
+                        labels: {
+                            // This more specific font property overrides the global property
+                            font: {
+                                size: 20
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Chart Data
+            var chartData = {
+                labels: [totales[0] + ":COVID", totales[1] + ": NO COVID",],
+                datasets: [{
+                    label: "My First dataset",
+                    data: totales,
+                    backgroundColor: ['#FF7D4D', '#00A5A8',],
+                }]
+            };
+
+            var config = {
+                type: 'pie',
+
+                // Chart Options
+                options: chartOptions,
+
+                data: chartData
+            };
+
+            // Create the chart
+            var pieSimpleChart = new Chart(ctx, config);
+        });
+    </script>
+
+
+    <script>
+        // Column chart
+        // ------------------------------
+        $(window).on("load", function () {
+
+
+            let barra_covid = {{ tabla_consolidado_covid|safe }};
+            let barra_no_covid = {{ tabla_consolidado_no_covid|safe }};
+
+            //Get the context of the Chart canvas element we want to select
+            var ctx = $("#column-chart");
+
+            // Chart Options
+            var chartOptions = {
+                // Elements options apply to all of the options unless overridden in a dataset
+                // In this case, we are setting the border of each bar to be 2px wide and green
+                elements: {
+                    rectangle: {
+                        borderWidth: 2,
+                        borderColor: 'rgb(0, 255, 0)',
+                        borderSkipped: 'bottom'
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                responsiveAnimationDuration: 500,
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'AUTORIZACIONES SANITARIAS DE CREMACIONES'
+                }
+            };
+
+            // Chart Data
+            var chartData = {
+                labels: ["Solicitud sin # expd.", " Solicitud con # expd.", " Solicitud pendiente", "Solicitud observada", "Solicitud autorizada"],
+                datasets: [{
+                    label: "Covid",
+                    data: barra_covid,
+                    backgroundColor: "#F98E76",
+                    hoverBackgroundColor: "rgba(249,142,118,.9)",
+                    borderColor: "transparent"
+                }, {
+                    label: "No covid",
+                    data: barra_no_covid,
+                    backgroundColor: "#28D094",
+                    hoverBackgroundColor: "rgba(22,211,154,.9)",
+                    borderColor: "transparent"
+                }]
+            };
+
+            var config = {
+                type: 'bar',
+
+                // Chart Options
+                options: chartOptions,
+
+                data: chartData
+            };
+
+            // Create the chart
+            var lineChart = new Chart(ctx, config);
+        });
+    </script>
+
+{% endblock static_detalle %}

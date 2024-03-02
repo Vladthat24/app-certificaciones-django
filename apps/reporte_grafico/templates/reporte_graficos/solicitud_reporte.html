@@ -1,0 +1,121 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item ">Reportes consolidados (GRAFICOS)</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">{{ title }}</h2>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="row justify-content-md-center">
+                                <div class="card" style="margin-bottom: 0 !important;">
+                                    <div class="card-content collapse show">
+                                        <div class="card-body"
+                                             style="padding-top: 0 !important; margin-bottom: 0 !important;     padding-bottom: 0 !important;">
+
+                                            <form class="form" method="post" role="form"
+                                                  action="{% url 'reporte-grafico:solicitud-form' %}">
+
+                                                {% csrf_token %}
+
+
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-10">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <label class=""
+                                                                       for="fecha_inicio">Fecha inicio</label>
+                                                                <div class="form-group">
+                                                                    <input type="date" name="fecha_inicio"
+                                                                           class="form-control " tabindex="1"
+                                                                           required="" id="fecha_inicio"
+                                                                           value="{{ fecha_inicio }}">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-6">
+                                                                <label class=""
+                                                                       for="fecha_final">Fecha final</label>
+                                                                <div class="form-group">
+                                                                    <input type="date" name="fecha_final"
+                                                                           class="form-control " tabindex="2"
+                                                                           required="" id="fecha_final"
+                                                                           value="{{ fecha_final }}">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-2">
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-primary" id="buscar">
+                                                                <i class="la la-search"></i> BUSCAR
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            {% block detalle %}
+                                <div class="card">
+                                    <div class="card-body">
+                                    </div>
+                                </div>
+                            {% endblock detalle %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+
+    <script src="{% static 'app-assets/vendors/js/charts/chart.min.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/chartist.min.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/flot/jquery.flot.min.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/flot/jquery.flot.resize.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/flot/jquery.flot.time.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/flot/jquery.flot.selection.js' %} "></script>
+    <script src="{% static 'app-assets/vendors/js/charts/flot/jquery.flot.symbol.js' %} "></script>
+
+
+    {% block static_detalle %}
+
+    {% endblock static_detalle %}
+
+{% endblock static %}
+
+
+
+

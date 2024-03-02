@@ -1,0 +1,61 @@
+{% load static %}
+
+
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notificación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="text-danger"><strong>Se liberó el lote: </strong><span id="lot_name"></span></h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+        integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#notificationModal').on('hidden.bs.modal', function () {
+            window.location.href = '/lot/list';
+        });
+
+
+        const socket = io('https://server-sockets.herokuapp.com/');
+
+        socket.on('response:documentary-message', function (data) {
+
+            if ("{{ user.username }}" !== data.data.user) {
+                $('#notificationModal').modal('show');
+                $('#lot_name').text(data.data.lot_full_name);
+            }
+            $.notify({
+                message: 'Lote: ' + data.data.lot_full_name + ' --> LIBERADO!!'}, {
+                type: 'danger'});
+
+        });
+
+        $("#liberar-lote").click(function () {
+            socket.emit('documentary', {
+                data: {
+                    lot_full_name: $('#lot-full-name').val(),
+                    user: "{{ user.username }}"
+                }
+            });
+
+        });
+
+    });
+
+</script>

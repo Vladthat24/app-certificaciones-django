@@ -1,0 +1,224 @@
+{% extends 'dashboard.html' %}
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item ">Certificación</li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url 'certificacion:list' %}">Todos los certificados</a>
+                                </li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}</h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <form id="father-form" class="text-left was-validated form-validate" method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                        <input name="referer" value="{{ referer }}" hidden>
+                                            {% include 'includes/bs4_form.html' with form=form col=3 exclude="fallecido_hora fallecido_direccion necropsia_causa_muerte necropsia_numero fecha_cert_necropsia" start_tabindex=0 hidden="solicitud created_ip updated_ip orden " %}
+                                            {#                                            {% include 'includes/bs4_form.html' with form=form col=3 exclude="" include="tipo_otro" start_tabindex=0 hidden="" %}#}
+
+                                            <div class="col-md-2" id="content-id_fallecido_hora">
+                                                <label for="id_name">Hora de fallecimiento:</label>
+                                                <div class="form-group">
+                                                    <div class="input-group date" id="datetimepicker"
+                                                         data-target-input="nearest">
+                                                        <input type="text" name="fallecido_hora"
+                                                               autocomplete="off"
+                                                               id="id_fallecido_hora"
+                                                                {% if form.fallecido_hora.value %}
+                                                               value="{{ form.fallecido_hora.value }}"
+                                                                {% endif %}
+                                                               data-toggle="datetimepicker"
+                                                               class="form-control datetimepicker-input"
+                                                               data-target="#datetimepicker"/>
+                                                        <div class="input-group-append"
+                                                             data-target="#datetimepicker"
+                                                             data-toggle="datetimepicker">
+                                                            <div class="input-group-text">
+                                                                <i class="la la-clock-o"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include="fallecido_direccion necropsia_causa_muerte necropsia_numero fecha_cert_necropsia" exclude="" start_tabindex=0 hidden="" %}
+                                            {#                                            {% include 'includes/bs4_form.html' with form=form col=3 exclude="" include="tipo_otro" start_tabindex=0 hidden="" %}#}
+
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="text-right">
+                                                <a type="" href="{% url 'certificacion:list' %}{{ referer }}"
+                                                   class="btn  btn-danger form-button">Cancelar</a>
+                                                <button type="submit" class="btn btn-success form-button">Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+
+        $(function () {
+            $('#datetimepicker').datetimepicker({
+                format: 'LT'
+            });
+        });
+
+
+        var validOtro = () => {
+            let valor = $("#id_tipo").val();
+
+            if (valor === "6") {
+
+                $("#content-id_tipo_otro").show();
+
+            } else {
+
+                $("#content-id_tipo_otro").hide();
+
+                if (valor === "1") {
+                    $("#content-id_solicitante_dni").hide();
+                    $("#content-id_solicitante").hide();
+                    $("#content-id_parentesco").hide();
+                    $("#content-id_fallecido_dni").hide();
+                    $("#content-id_fallecido_nombre").hide();
+                    $("#content-id_fallecido_fecha").hide();
+                    {#$("#content-id_fallecido_direccion").hide();#}
+                    $("#content-id_necropsia_causa_muerte").hide();
+                    $("#content-id_necropsia_numero").hide();
+                    $("#content-id_fecha_cert_necropsia").hide();
+                    $("#content-id_fallecido_hora").hide();
+                } else {
+                    $("#content-id_solicitante_dni").show();
+                    $("#content-id_solicitante").show();
+                    $("#content-id_parentesco").show();
+                    $("#content-id_fallecido_dni").show();
+                    $("#content-id_fallecido_nombre").show();
+                    $("#content-id_fallecido_fecha").show();
+                    {#$("#content-id_fallecido_direccion").show();#}
+                    $("#content-id_necropsia_causa_muerte").show();
+                    $("#content-id_necropsia_numero").show();
+                    $("#content-id_fecha_cert_necropsia").show();
+                    $("#content-id_fallecido_hora").show();
+                }
+            }
+        }
+
+        $("#id_tipo").on("change", function (e) {
+            validOtro()
+        })
+
+        validOtro();
+
+        // DNI, validar DNI SOLICITANTE
+
+        var updateDniSolicitanteForm = (dni) => {
+            $.ajax({
+                type: 'GET',
+                {#crossDomain: true,#}
+                dataType: 'json',
+                url: "/solicitud/validar-persona/" + dni,
+                data: {},
+                success: function (data) {
+                    if (data) {
+                        if (data.estado === true) {
+                            $('#id_solicitante').val(data.persona.name + " " + data.persona.first_name + " " + data.persona.last_name);
+                            $('#id_solicitante_dni').val(data.persona.dni);
+                            $("#solicitante_validation_text").remove();
+                            $('label[for="id_solicitante_dni"]').append(" <span id='solicitante_validation_text' class='badge badge-success text-bold-700' style='cursor: pointer;'> Encontrado </span>");
+                        } else {
+                            $("#solicitante_validation_text").remove();
+                            $('label[for="id_solicitante_dni"]').append(" <span id='solicitante_validation_text' class='badge badge-warning text-bold-700' style='cursor: pointer;'>  No encontrado </span>");
+                        }
+                    }
+                }
+            });
+        };
+
+
+        $("#id_solicitante_dni").keyup(function () {
+            const dni = $(this).val();
+            if (dni.length === 8) {
+                $("#solicitante_validation_text").remove();
+                $('label[for="id_solicitante_dni"]').append(" <span id='solicitante_validation_text' class='badge badge-info text-bold-700' style='cursor: pointer;'> Validando... </span>");
+                updateDniSolicitanteForm(dni);
+
+            } else {
+                $("#solicitante_validation_text").remove();
+                $('#id_solicitante').val("");
+            }
+        });
+
+        // VALIDAR DNI - FALLECIDO
+
+
+        var updateDniFallecidoForm = (dni) => {
+            $.ajax({
+                type: 'GET',
+                {#crossDomain: true,#}
+                dataType: 'json',
+                url: "/solicitud/validar-persona/" + dni,
+                data: {},
+                success: function (data) {
+
+                    if (data) {
+                        if (data.estado === true) {
+                            $('#id_fallecido_nombre').val(data.persona.name + " " + data.persona.first_name + " " + data.persona.last_name);
+                            $('#id_fallecido_dni').val(data.persona.dni);
+                            $(".fallecido_validation_text").remove();
+                            $('label[for="id_fallecido_dni"]').append(" <span  class='fallecido_validation_text badge badge-success text-bold-700' style='cursor: pointer;'> Encontrado </span>");
+                        } else {
+                            $(".fallecido_validation_text").remove();
+                            $('label[for="id_fallecido_dni"]').append(" <span  class='fallecido_validation_text badge badge-warning text-bold-700' style='cursor: pointer;'>  No encontrado </span>");
+                        }
+                    }
+                }
+            });
+        };
+
+        $("#id_fallecido_dni").keyup(function () {
+            const dni = $(this).val();
+            if (dni.length === 8) {
+                $(".fallecido_validation_text").remove();
+                $('label[for="id_fallecido_dni"]').append(" <span class='fallecido_validation_text badge badge-info text-bold-700' style='cursor: pointer;'> Validando... </span>");
+                updateDniFallecidoForm(dni);
+            } else {
+                $(".fallecido_validation_text").remove();
+                $('#id_fallecido_nombre').val("");
+            }
+        });
+
+
+    </script>
+
+{% endblock static %}

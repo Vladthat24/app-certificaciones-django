@@ -1,0 +1,85 @@
+{#{% if request.session.menu_manager == 'active' %}#}
+{#    <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">#}
+{#        {% for j in request.session.menu %}#}
+{#            <li class=" {% if j.id == request.session.menu_parent %}  active  open {% endif %} ">#}
+{#                <a class="menu-item" data-toggle="tooltip"#}
+{#                   data-placement="right" title="{{ j.name }}"#}
+{#                        {% if j.url == "/tea/edit/" %}#}
+{#                   href="{{ j.url }}{{ request.session.tea_id }}?children_id={{ j.id }}"#}
+{#                        {% else %}#}
+{#                   href="{{ j.url }}?children_id={{ j.id }}"#}
+{#                        {% endif %}#}
+{##}
+{#                >#}
+{#                    <i class="la la-{{ j.icon }}"></i>#}
+{#                    <span class="menu-title" data-i18n="">{{ j.name }}</span>#}
+{#                </a>#}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#{% endif %}#}
+
+
+{% for i in request.session.menu %}
+
+    <li class=" nav-item {% if i.menu.id == request.session.menu_parent %}   open {% endif %} ">
+        <a href="{{ i.menu.url }}?children_id={{ i.menu.id }}">
+            <i class="la la-{{ i.menu.icon }}"></i>
+            <span class="menu-title" data-i18n="">{{ i.menu.name }}</span>
+        </a>
+        <ul class="menu-content">
+
+            {% for j in i.childrens %}
+                <li class=" {% if j.id == request.session.menu_children %} active  {% endif %}"
+                data-toggle="tooltip" data-placement="left" title="{{ j.name }}">
+                    <a class="menu-item"
+                       href="{{ j.url }}?children_id={{ j.id }}">
+                        <i class="la la-{{ j.icon }}"></i> {{ j.name }}
+                    </a>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </li>
+
+
+    {#    <ul class="navbar-nav navbar-sidenav" id="AccordionMenuMain">#}
+    {#        <li class="nav-item">#}
+    {#            <a class="nav-link nav-link-collapse {% if i.menu.id == request.session.menu_parent %}   {% else %} collapsed {% endif %}"#}
+    {#               aria-expanded="false"#}
+    {#               data-toggle="collapse" href="#{{ i.menu.id }}"#}
+    {#               data-parent="#AccordionMenuMain">#}
+    {#                <i class="fa fa-{{ i.menu.icon }}"></i>#}
+    {#                <span class="nav-link-text">{{ i.menu.name }}</span>#}
+    {#            </a>#}
+    {#            <ul class="sidenav-second-level collapse {% if i.menu.id == request.session.menu_parent %}  show {% endif %} "#}
+    {#                id="{{ i.menu.id }}">#}
+    {#                {% for j in i.childrens %}#}
+    {#                    <li class="nav-item {% if j.id == request.session.menu_children %} active  {% endif %}">#}
+    {#                        <a class="nav-link" href="{{ j.url }}?children_id={{ j.id }}">#}
+    {#                            <i class="fa fa-fw fa-{{ j.icon }}"></i>#}
+    {#                            <span class="nav-link-text">{{ j.name }}</span>#}
+    {#                        </a>#}
+    {#                    </li>#}
+    {#                {% endfor %}#}
+    {#            </ul>#}
+    {#        </li>#}
+    {#    </ul>#}
+{% endfor %}
+
+
+
+{#<li class="active"><a href="index_public.html"><i class="la la-home"></i><span class="menu-title" data-i18n="">Dashboard Hospital</span></a>#}
+{#</li>#}
+{#<li class=" navigation-header"><span data-i18n="nav.category.professional">Professional</span><i#}
+{#        class="la la-ellipsis-h ft-minus" data-toggle="tooltip" data-placement="right"#}
+{#        data-original-title="Professional"></i>#}
+{#</li>#}
+{#<li class=" nav-item"><a href="#"><i class="la la-edit"></i><span class="menu-title" data-i18n="">Appointment</span></a>#}
+{#    <ul class="menu-content">#}
+{#        <li><a class="menu-item" href="hospital-doctor-schedule.html">Doctor Schedule</a>#}
+{#        </li>#}
+{#        <li><a class="menu-item" href="hospital-book-appointment.html">Book Appointment</a>#}
+{#        </li>#}
+{#    </ul>#}
+{#</li>#}

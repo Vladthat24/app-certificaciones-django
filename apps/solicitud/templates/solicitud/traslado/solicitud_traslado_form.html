@@ -1,0 +1,835 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block main %}
+
+
+    <style>
+
+
+        .stepwizard-row:before {
+            top: 30px !important;
+            height: 3px !important;
+            background-color: #336b34 !important;
+        }
+
+        .btn-circle {
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 30px !important;
+            font-size: 30px !important;
+        }
+
+        .card .card-bordered {
+            border: 2px solid rgb(30 168 246);
+        }
+
+    </style>
+
+    <div id="content-vue">
+        {#        <div class="content-spinner text-center" v-if="spinner">#}
+        {#            <div class="spinner"></div>#}
+        {#        </div>#}
+
+        <div class="app-content text-center">
+            <div class="content-wrapper justify-content-center m-5">
+
+                <div class="content-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1><strong> SOLICITUD DE AUTORIZACIÓN SANITARIA PARA TRASLADO DE CADAVER </strong>
+                                    </h1>
+                                </div>
+
+                                <div class="card-body">
+
+
+                                    <div class="stepwizard">
+                                        <div class="stepwizard-row setup-panel">
+                                            <div class="stepwizard-step col-md-3">
+                                                <button type="button" class="btn btn-circle"
+                                                        :class="{'btn-success' : paso_actual >= 1 }">1
+                                                </button>
+                                                <h3 :class="{'text-success' : paso_actual == 1 }"><i
+                                                        class="la la-barcode"></i> Recibo de pago</h3>
+                                            </div>
+                                            <div class="stepwizard-step col-md-3">
+                                                <button type="button" class="btn btn-circle"
+                                                        :class="{'btn-success' : paso_actual >= 2 }">2
+                                                </button>
+                                                <h3 :class="{'text-success' : paso_actual == 2 }"><i
+                                                        class="ft-user"></i> Datos del solicitante</h3>
+                                            </div>
+                                            <div class="stepwizard-step col-md-3">
+                                                <button type="button" class="btn btn-circle"
+                                                        :class="{'btn-success' : paso_actual >= 3 }">3
+                                                </button>
+                                                <h3 :class="{'text-success' : paso_actual == 3 }"><i
+                                                        class="la la-user-md"></i> Datos del fallecido</h3>
+                                            </div>
+                                            <div class="stepwizard-step col-md-3">
+                                                <button type="button" class="btn btn-circle"
+                                                        :class="{'btn-success' : paso_actual >= 4 }">4
+                                                </button>
+                                                <h3 :class="{'text-success' : paso_actual == 4 }"><i
+                                                        class="la la-truck"></i> Traslado</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form role="form" class="mt-3">
+                                        <div class="card card-bordered " v-show="paso_actual===1">
+
+                                            <h1 class="text-info">
+                                                RECIBO DE PAGO
+                                                <i class="la la-barcode"></i>
+                                            </h1>
+
+                                            <div class="card text-white bg-primary text-justify">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-3"></div>
+                                                        <div class="col-md-3"
+                                                             id="recibo_pago_content">
+                                                            <label for="recibo_pago"
+                                                                   class="text-white"> Recibo escaneado:</label>
+                                                            <div class="form-group ">
+                                                                <input type="file"
+                                                                       id="recibo_pago"
+                                                                       v-model="recibo_pago"
+                                                                       name="recibo_pago"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3"
+                                                             id="recibo_pago_codigo_content">
+                                                            <label for="recibo_pago_codigo"
+                                                                   class="text-white"> Código recibo:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text"
+                                                                       id="recibo_pago_codigo"
+                                                                       v-model="recibo_pago_codigo"
+                                                                       name="recibo_pago_codigo"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-footer text-center">
+                                                    <button class="btn btn-success btn-darken-3 text-center"
+                                                            v-on:click="paso_actual++">
+                                                        Siguiente
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card card-bordered" v-show="paso_actual===2">
+
+                                            <h1 class="text-info">
+                                                DATOS DEL SOLICITANTE <i class="ft-user"></i>
+                                            </h1>
+
+                                            <div class="card text-white bg-primary text-justify">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-3" id="solicitante_tipo_documento_content">
+                                                            <label for="solicitante_tipo_documento" class="text-white">Tipo
+                                                                de
+                                                                documento:</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_tipo_documento"
+                                                                        v-model="solicitante_tipo_documento"
+                                                                        name="solicitante_tipo_documento"
+                                                                        class="form-control"
+                                                                        required="">
+                                                                    <option v-for="(item, index) in tipos_documento"
+                                                                            :key="index"
+                                                                            :value="item.id"
+                                                                            v-if="item.id !==4  && item.id !==8">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_numero_documento_content">
+                                                            <label for="solicitante_numero_documento"
+                                                                   class="text-white">Número de documento:
+                                                                <div class="badge badge-success round"
+                                                                     style="cursor: pointer;"
+                                                                     data-toggle="tooltip" data-placement="top"
+                                                                     v-if="solicitante_numero_documento_valid"
+                                                                     v-on:click="UpadteDataSolicitanteByDNI()"
+                                                                     title="" data-original-title="Validar documento">
+                                                                    validar
+                                                                </div>
+                                                            </label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_numero_documento"
+                                                                       v-model="solicitante_numero_documento"
+                                                                       name="solicitante_numero_documento"
+                                                                       class="form-control"
+                                                                       minlength="8" maxlength="13" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_nombres_content">
+                                                            <label for="solicitante_nombres"
+                                                                   class="text-white">Nombres:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_nombres"
+                                                                       v-model="solicitante_nombres"
+                                                                       name="solicitante_nombres" class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_apellido_paterno_content">
+                                                            <label for="solicitante_apellido_paterno"
+                                                                   class="text-white">Apellido
+                                                                paterno:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_apellido_paterno"
+                                                                       v-model="solicitante_apellido_paterno"
+                                                                       name="solicitante_apellido_paterno"
+                                                                       class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_apellido_materno_content">
+                                                            <label for="solicitante_apellido_materno"
+                                                                   class="text-white">Apellido materno:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_apellido_materno"
+                                                                       v-model="solicitante_apellido_materno"
+                                                                       name="solicitante_apellido_materno"
+                                                                       class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_estado_civil_content">
+                                                            <label for="solicitante_estado_civil" class="text-white">
+                                                                Estado civil:</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_estado_civil"
+                                                                        v-model="solicitante_estado_civil"
+                                                                        name="solicitante_estado_civil"
+                                                                        class="form-control"
+                                                                        required="">
+                                                                    <option v-for="(item, index) in estados_civiles"
+                                                                            :key="index"
+                                                                            :value="item.id">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_correo_content">
+                                                            <label for="solicitante_correo"
+                                                                   class="text-white">Correo:</label>
+                                                            <div class="form-group ">
+                                                                <input type="email" id="solicitante_correo"
+                                                                       v-model="solicitante_correo"
+                                                                       name="solicitante_correo" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_celular_content">
+                                                            <label for="solicitante_celular"
+                                                                   class="text-white">Celular:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_celular"
+                                                                       v-model="solicitante_celular"
+                                                                       name="solicitante_celular" class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3" id="solicitante_parentesco_content">
+                                                            <label for="solicitante_parentesco" class="text-white">
+                                                                Parentesco (Soy el(la) "..." del fallecido):</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_parentesco"
+                                                                        v-model="solicitante_parentesco"
+                                                                        name="solicitante_parentesco"
+                                                                        class="form-control" required="">
+                                                                    <option v-for="(item, index) in parentescos"
+                                                                            :key="index" v-if="item.id != 8"
+                                                                            :value="item.id">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3" id="solicitante_direccion_content">
+                                                            <label for="solicitante_direccion" class="text-white">
+                                                                Domicilio:</label>
+                                                            <div class="form-group ">
+                                                            <textarea id="solicitante_direccion"
+                                                                      v-model="solicitante_direccion"
+                                                                      name="solicitante_direccion"
+                                                                      rows="3"
+                                                                      class="form-control" required=""></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-footer text-center">
+                                                    <button class="btn btn-danger btn-darken-3"
+                                                            v-on:click="paso_actual--">
+                                                        Anterior
+                                                    </button>
+                                                    <button class="btn btn-success btn-darken-3"
+                                                            v-on:click="paso_actual++">
+                                                        Siguiente
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card card-bordered" v-show="paso_actual===3">
+
+                                            <h1 class="text-info"> DATOS DEL FALLECIDO
+                                                <i class="la la-user-md"></i>
+                                            </h1>
+
+                                            <div class="card text-white bg-primary text-justify">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-3" id="solicitante_tipo_documento_content">
+                                                            <label for="solicitante_tipo_documento" class="text-white">Tipo
+                                                                de
+                                                                documento:</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_tipo_documento"
+                                                                        v-model="solicitante_tipo_documento"
+                                                                        name="solicitante_tipo_documento"
+                                                                        class="form-control"
+                                                                        required="">
+                                                                    <option v-for="(item, index) in tipos_documento"
+                                                                            :key="index"
+                                                                            :value="item.id"
+                                                                            v-if="item.id !==4  && item.id !==8">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_numero_documento_content">
+                                                            <label for="solicitante_numero_documento"
+                                                                   class="text-white">Número de documento:
+                                                                <div class="badge badge-success round"
+                                                                     style="cursor: pointer;"
+                                                                     data-toggle="tooltip" data-placement="top"
+                                                                     v-if="solicitante_numero_documento_valid"
+                                                                     v-on:click="UpadteDataSolicitanteByDNI()"
+                                                                     title="" data-original-title="Validar documento">
+                                                                    validar
+                                                                </div>
+                                                            </label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_numero_documento"
+                                                                       v-model="solicitante_numero_documento"
+                                                                       name="solicitante_numero_documento"
+                                                                       class="form-control"
+                                                                       minlength="8" maxlength="13" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_nombres_content">
+                                                            <label for="solicitante_nombres"
+                                                                   class="text-white">Nombres:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_nombres"
+                                                                       v-model="solicitante_nombres"
+                                                                       name="solicitante_nombres" class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_apellido_paterno_content">
+                                                            <label for="solicitante_apellido_paterno"
+                                                                   class="text-white">Apellido
+                                                                paterno:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_apellido_paterno"
+                                                                       v-model="solicitante_apellido_paterno"
+                                                                       name="solicitante_apellido_paterno"
+                                                                       class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3" id="solicitante_apellido_materno_content">
+                                                            <label for="solicitante_apellido_materno"
+                                                                   class="text-white">Apellido materno:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="solicitante_apellido_materno"
+                                                                       v-model="solicitante_apellido_materno"
+                                                                       name="solicitante_apellido_materno"
+                                                                       class="form-control"
+                                                                       maxlength="150" required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="fallecido_fecha_nacimiento_content">
+                                                            <label for="fallecido_fecha_nacimiento"
+                                                                   class="text-white">Fecha de nacimiento:</label>
+                                                            <div class="form-group ">
+                                                                <input type="date" id="fallecido_fecha_nacimiento"
+                                                                       v-model="fallecido_fecha_nacimiento"
+                                                                       name="fallecido_fecha_nacimiento"
+                                                                       class="form-control" required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="solicitante_estado_civil_content">
+                                                            <label for="solicitante_estado_civil" class="text-white">
+                                                                Estado civil:</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_estado_civil"
+                                                                        v-model="solicitante_estado_civil"
+                                                                        name="solicitante_estado_civil"
+                                                                        class="form-control"
+                                                                        required="">
+                                                                    <option v-for="(item, index) in estados_civiles"
+                                                                            :key="index"
+                                                                            :value="item.id">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="solicitante_parentesco_content">
+                                                            <label for="solicitante_parentesco" class="text-white">
+                                                                Parentesco (Es mi "..." ):</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="solicitante_parentesco"
+                                                                        v-model="solicitante_parentesco"
+                                                                        name="solicitante_parentesco"
+                                                                        class="form-control" required="">
+                                                                    <option v-for="(item, index) in parentescos"
+                                                                            :key="index" v-if="item.id != 8"
+                                                                            :value="item.id">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3"
+                                                             id="fallecido_fecha_fallecimiento_content">
+                                                            <label for="fallecido_fecha_fallecimiento"
+                                                                   class="text-white">Fecha de fallecimiento:</label>
+                                                            <div class="form-group ">
+                                                                <input type="date" id="fallecido_fecha_fallecimiento"
+                                                                       v-model="fallecido_fecha_fallecimiento"
+                                                                       name="fallecido_fecha_fallecimiento"
+                                                                       class="form-control" required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3"
+                                                             id="fallecido_hora_fallecimiento_content">
+                                                            <label for="fallecido_hora_fallecimiento"
+                                                                   class="text-white">Hora de fallecimiento:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="fallecido_hora_fallecimiento"
+                                                                       v-model="fallecido_hora_fallecimiento"
+                                                                       name="fallecido_hora_fallecimiento"
+                                                                       class="form-control" required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-3" id="lugar_fallecimiento_tipo_content">
+                                                            <label for="lugar_fallecimiento_tipo" class="text-white">Lugar
+                                                                de fallecimiento:</label>
+                                                            <div class="form-group ">
+                                                                <select type="text" id="lugar_fallecimiento_tipo"
+                                                                        v-model="lugar_fallecimiento_tipo"
+                                                                        name="lugar_fallecimiento_tipo"
+                                                                        class="form-control"
+                                                                        required="">
+                                                                    <option v-for="(item, index) in lugares_fallecimiento"
+                                                                            :key="index"
+                                                                            :value="item.id">
+                                                                        [[item.value]]
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="lugar_fallecimiento_hospital_content">
+                                                            <label for="lugar_fallecimiento_hospital"
+                                                                   class="text-white">
+                                                                Dirección:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="lugar_fallecimiento_hospital"
+                                                                       v-model="lugar_fallecimiento_hospital"
+                                                                       name="lugar_fallecimiento_hospital"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="card-footer text-center">
+                                                    <button class="btn btn-danger btn-darken-3"
+                                                            v-on:click="paso_actual--">
+                                                        Anterior
+                                                    </button>
+                                                    <button class="btn btn-success btn-darken-3"
+                                                            v-on:click="paso_actual++">
+                                                        Siguiente
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card card-bordered" v-show="paso_actual===4">
+
+
+                                            <h1 class="text-info"> TRASLADO
+                                                <i class="la la-truck"></i>
+                                            </h1>
+
+                                            <div class="card text-white bg-primary text-justify">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+
+                                                        <div class="col-md-3" id="traslado_origen_content">
+                                                            <label for="traslado_origen" class="text-white">Ubicación
+                                                                del cadaver:</label>
+                                                            <div class="form-group ">
+                                                                <textarea type="text" id="traslado_origen"
+                                                                          v-model="traslado_origen"
+                                                                          name="traslado_origen"
+                                                                          class="form-control"
+                                                                          required=""
+                                                                          rows="4">
+                                                                </textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3" id="traslado_destino_content">
+                                                            <label for="traslado_destino" class="text-white">Lugar de
+                                                                traslado:</label>
+                                                            <div class="form-group ">
+                                                                <textarea type="text" id="traslado_destino"
+                                                                          v-model="traslado_destino"
+                                                                          name="traslado_destino"
+                                                                          class="form-control"
+                                                                          required=""
+                                                                          rows="4">
+                                                                </textarea>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="traslado_via_content">
+                                                            <label for="traslado_via" class="text-white">Vía de
+                                                                traslado:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="traslado_via"
+                                                                       v-model="traslado_via"
+                                                                       name="traslado_via"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="traslado_fecha_content">
+                                                            <label for="traslado_fecha" class="text-white">Fecha de
+                                                                traslado:</label>
+                                                            <div class="form-group ">
+                                                                <input type="date" id="traslado_fecha"
+                                                                       v-model="traslado_fecha"
+                                                                       name="traslado_fecha"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-md-3" id="traslado_hora_content">
+                                                            <label for="traslado_hora" class="text-white">Fecha de
+                                                                traslado:</label>
+                                                            <div class="form-group ">
+                                                                <input type="text" id="traslado_hora"
+                                                                       v-model="traslado_hora"
+                                                                       name="traslado_hora"
+                                                                       class="form-control"
+                                                                       required="">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="card-footer text-center">
+                                                <button class="btn btn-danger btn-darken-3"
+                                                        v-on:click="paso_actual--">
+                                                    Anterior
+                                                </button>
+                                                <button class="btn btn-success btn-darken-3"
+                                                        v-on:click="paso_actual--">
+                                                    Enviar
+                                                </button>
+                                            </div>
+
+
+                                        </div>
+                                    </form>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            {#            <div class="container">#}
+            {#                <div class="row">#}
+            {#                    <div class="text-center">#}
+            {#                        <h1> [[message]] </h1>#}
+            {#                    </div>#}
+            {##}
+            {#                    <a v-bind:href="url_success" rel="noreferrer">#}
+            {#                        .. XD#}
+            {#                    </a>#}
+            {##}
+            {#                </div>#}
+            {#            </div>#}
+        </div>
+    </div>
+{% endblock main %}
+
+
+{% block static %}
+
+    {##}
+    {#    <script>#}
+    {#        function LoadOnce() {#}
+    {#            window.location.reload();#}
+    {#        }#}
+    {##}
+    {#    </script>#}
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <script>
+
+        let url = "http://localhost:8000";
+
+        if (window.location.hostname !== "localhost") {
+            url = window.location.origin;
+        }
+
+        var app = new Vue({
+            el: '#content-vue',
+            delimiters: ['[[', ']]'],
+            data: {
+                message: 'Hello Vuess!',
+                spinner: true,
+                token: '',
+                url_success: '',
+
+                //VAIABLES GENERALES
+
+                paso_actual: 1,
+
+
+                // CONSTANTES..
+
+
+                lugares_fallecimiento: [
+                    {id: 1, value: 'Hospital'},
+                    {id: 2, value: 'Domicilio'},
+                    {id: 3, value: 'Vía pública'},
+                    {id: 4, value: 'Otros'},
+                ],
+
+                tipos_documento: [
+                    {id: 1, value: 'D.N.I.'},
+                    {id: 2, value: 'Carné de extranjería'},
+                    {id: 3, value: 'Pasaporte'},
+                    {id: 4, value: 'NN'},
+                    {id: 5, value: 'A.S.'},
+                    {id: 6, value: 'C.I.'},
+                    {id: 7, value: 'P.T.P'},
+                    {id: 8, value: 'Acta de nacimiento'},
+                ],
+
+                estados_civiles: [
+                    {id: 1, value: 'Soltero(a)'},
+                    {id: 2, value: 'Casado(a)'},
+                    {id: 3, value: 'Viudo(a)'},
+                    {id: 4, value: 'Divorciado(a)'},
+                ],
+
+                parentescos: [
+                    {id: 1, value: 'Madre'},
+                    {id: 2, value: 'Padre'},
+                    {id: 3, value: 'Hijo'},
+                    {id: 4, value: 'Hija'},
+                    {id: 5, value: 'Hermano'},
+                    {id: 6, value: 'Hermana'},
+                    {id: 7, value: 'Cónyuge'},
+                    {id: 8, value: 'Óbito fetal'},
+                    {id: 9, value: 'Abuelo'},
+                    {id: 10, value: 'Abuela'},
+                    {id: 11, value: 'Tío'},
+                    {id: 12, value: 'Tía'},
+                    {id: 13, value: 'Nieto'},
+                    {id: 14, value: 'Nieta'},
+                    {id: 15, value: 'Sobrino'},
+                    {id: 16, value: 'Sobrina'},
+                    {id: 17, value: 'Primo'},
+                    {id: 18, value: 'Prima'},
+                ],
+
+                // Variables de validación
+
+                solicitante_numero_documento_valid: false,
+
+                // Atributos del Modelo
+
+
+                // RECIBO DE PAGO
+                recibo_pago: '',
+                recibo_pago_codigo: '',
+
+                // SOLICITANTE
+                solicitante_tipo_documento: '',
+                solicitante_numero_documento: '',
+                solicitante_nombres: '',
+                solicitante_apellido_paterno: '',
+                solicitante_apellido_materno: '',
+                solicitante_estado_civil: '',
+                solicitante_correo: '',
+                solicitante_celular: '',
+                solicitante_parentesco: '',
+                solicitante_direccion: '',
+
+                // FALLECIDO
+                fallecido_tipo_documento: '',
+                fallecido_numero_documento: '',
+                fallecido_nombres: '',
+                fallecido_apellido_paterno: '',
+                fallecido_apellido_materno: '',
+                fallecido_sexo: '',
+                fallecido_fecha_nacimiento: '',
+                fallecido_estado_civil: '',
+                fallecido_fecha_fallecimiento: '',
+                fallecido_hora_fallecimiento: '',
+                fallecido_parentesco: '',
+
+                lugar_fallecimiento_tipo: '',
+                lugar_fallecimiento_preposicion_titulo: '',
+                lugar_fallecimiento_hospital: '',
+                hospital_id: '',
+                lugar_fallecimiento_direccion: '',
+                lugar_fallecimiento_distrito: '',
+
+
+                // TRASLADO
+                traslado_origen: '',
+                traslado_destino: '',
+                traslado_via: '',
+                traslado_fecha: '',
+                traslado_hora: '',
+
+            },
+            methods: {
+                GetToken: async function () {
+                    response = await fetch(url + "/api/token-validate-form/?token=" + this.token);
+                    const data = await response.json();
+                    console.log(data.count);
+                    if (data.count === 0) {
+                        window.location.href = '{% url 'solicitud:index-publico'%}';
+                    }
+                },
+                GetPersonReniec: async function (dni) {
+                    response = await fetch(url + "/solicitud/validar-persona/" + dni);
+                    const data = await response.json();
+                    if (data) {
+                        return data
+                    }
+                    return data;
+                },
+                UpadteDataSolicitanteByDNI: async function () {
+                    this.spinner = true;
+                    const data = await this.GetPersonReniec(this.solicitante_numero_documento);
+                    if (data.estado === true) {
+                        this.solicitante_nombres = data.persona.nombres;
+                        this.solicitante_apellido_paterno = data.persona.apellido_paterno;
+                        if (data.persona.apelido_casado === "SIN DATOS") {
+                            this.solicitante_apellido_materno = data.persona.apellido_materno;
+                        } else {
+                            this.solicitante_apellido_materno = data.persona.apellido_materno + " " + data.persona.apelido_casado;
+                        }
+                        this.solicitante_estado_civil = data.persona.estado_civil;
+                    }
+                    {#this.spinner = false;#}
+
+                    this.spinner = false;
+                }
+            },
+
+            created() {
+                console.log("created");
+                var pathArray = window.location.pathname.split('/');
+                this.token = pathArray[3];
+                this.url_success = '{% url 'solicitud:success-publico'  token  %}'.replace("token", this.token);
+                this.GetToken();
+            },
+
+            mounted: function () {
+                console.log("Mounted");
+                this.spinner = false
+            },
+
+            updated: function () {
+            },
+
+            watch: {
+
+                {#solicitante_tipo_documento: function (newValue, oldValue) {#}
+                {#    this.solicitante_numero_documento_valid = newValue === 1 && this.solicitante_numero_documento.length === 8;},#}
+                {##}
+                {#solicitante_numero_documento: function (newValue, oldValue) {#}
+                {#    this.solicitante_numero_documento_valid = this.solicitante_tipo_documento === 1 && newValue.length === 8;}#}
+
+            },
+
+        })
+    </script>
+
+{% endblock static %}

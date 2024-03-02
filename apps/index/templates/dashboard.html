@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main %}
+
+
+    <style>
+        .content-wrapper .nav-link {
+            background: #1e9ff214;
+            border: 1px solid #1e9ff2 !important;
+        }
+
+
+        .content-wrapper .nav-link:hover {
+            background: #fff !important;
+            border: 1px solid #0c5f94 !important;
+        }
+
+        .content-wrapper .nav-link.active {
+            background: #1e9ff2 !important;
+            color: #fff !important;
+            border: 1px solid #1e9ff2 !important;
+        }
+
+        .content-wrapper .tab-content {
+            border: 2px solid #1e9ef1 !important;
+        }
+
+
+        .avatar-online i {
+            background-color: #69f500 !important;
+        }
+
+        .avatar i {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+
+        .menu-float {
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+
+        .menu-float .list-group-item {
+            padding: 5px 20px;
+        }
+
+
+        @media only screen and (max-width: 600px) {
+
+            .content-entidad {
+                display: none;
+            }
+
+            #content-main .nav-tabs .nav-item {
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            #content-main .nav-tabs .nav-item a {
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            #content-main .nav-tabs {
+                margin-bottom: 5px !important;
+            }
+
+
+        }
+
+
+        .app-content .wizard > .steps > ul > li a {
+            position: relative;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 0 !important;
+            padding-top: 52px;
+        }
+
+        .app-content .wizard.wizard-notification > .steps > ul > li:before, .app-content .wizard.wizard-notification > .steps > ul > li:after {
+            top: 39px;
+            width: 50%;
+            height: 4px;
+            background-color: #3740bf;
+        }
+
+        .app-content .wizard > .steps > ul > li.current > a {
+            cursor: default;
+            color: #5159d2;
+            font-weight: bold;
+            font-size: 20px;
+            text-decoration: underline;
+        }
+
+        #validation > .wizard {
+            margin-left: 0 !important;
+        }
+
+        @media screen and (min-width: 800px) {
+            #validation > .wizard {
+                padding: 10%;
+                margin-left: 0 !important;
+            }
+
+
+        }
+
+        fieldset {
+            background: rgb(230 231 249);
+            padding: 2% !important;
+            margin-bottom: 2%;
+            border-radius: 10px;
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            cursor: not-allowed !important;
+        }
+
+
+        #anio-main {
+            font-size: 22px !important;
+            font-weight: 800 !important;
+        }
+
+    </style>
+
+    <style>
+        .table th, .table td {
+            padding: 8px 10px !important;
+        }
+    </style>
+
+
+
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light bg-dark navbar-shadow"
+
+         style="background-color: #1f5d9a !important;">
+        <div class="navbar-wrapper">
+
+            <div class="navbar-header">
+                <ul class="nav navbar-nav flex-row">
+                    <li class="nav-item mobile-menu d-md-none mr-auto"><a
+                            class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i
+                            class="ft-menu font-large-1"></i></a></li>
+                    <li class="nav-item"><a class="navbar-brand" href="{% url 'index:dashboard' %}"><img
+                            class="brand-logo"
+                            alt="modern admin logo"
+                            src="{% static 'img/peru.png' %}">
+                        <h3 class="brand-text">DIRIS LIMA SUR</h3></a></li>
+                    <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse"
+                                                      data-target="#navbar-mobile"><i class="la la-ellipsis-v"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-container content">
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+
+
+                    <div class="nav navbar-nav mr-auto ">
+
+                        <form style="width: 100%;">
+                            <div class="form-group row" style="margin-bottom: 0 !important;">
+                                <label for="anio-main" class="col-sm-2 col-form-label text-white text-bold-700"
+                                       style="padding-right: 0;">AÑO:</label>
+                                <div class="col-sm-5">
+                                    <select name="anio-main" class="form-control " tabindex="5" required=""
+                                            id="anio-main">
+                                        {% if request.session.anio == 0 %}
+                                            <option value="0">Elija un año</option>
+                                        {% endif %}
+
+                                        {% for p in request.session.anio_list %}
+                                            <option value="{{ p.id }}"
+                                                    {% if request.session.anio_current.id == p.id %}
+                                                    selected
+                                                    {% endif %}
+                                            >{{ p.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-5">
+                                    <p style="
+                                            background-color: #000000;
+                                            color: #fff;
+                                            margin-bottom: 0;
+                                            {#margin-top: 10px;#}
+                                            padding: 0 18px;
+                                            box-shadow: 5px 5px 5px black;font-size: 13px;">
+                                        Entidad: <strong> {{ request.session.entidad_nombre }} </strong></p>
+                                </div>
+                            </div>
+                        </form>
+
+
+                    </div>
+
+                    <div class="nav navbar-nav float-righ">
+
+                        <a class="dropdown-toggle nav-link dropdown-user-link"
+                           href=""><span class="mr-1">Hola,
+                            <span class="user-name text-bold-700">
+                                {% if request.session.user_full_name %}
+                                    {{ request.session.user_full_name }}
+                                {% else %}
+                                    {{ request.user.username }}
+                                {% endif %}
+                            </span></span>
+                            <span class="avatar avatar-online " style="width: 40px !important;">
+                                <img src="{% static 'img/avatar.png' %}" alt="avatar"
+                                     style="border: 1px solid #0918c3; background: #eab9b9;">
+                                <i class="la  "></i></span>
+
+                        </a>
+
+
+                        <ul class="list-group  menu-float">
+                            <a href="{% url 'password_change' %}" style="border: 1px solid #000;"
+                               class="list-group-item list-group-item-action text-white bg-warning">
+                                <i class="ft-anchor"></i>
+                                Cambiar contraseña
+                            </a>
+                            <a href="{% url 'index:logout' %}" style="border: 1px solid #000;"
+                               class="list-group-item list-group-item-action text-white bg-danger">
+                                <i class="ft-power"></i>
+                                Salir del sistema
+                            </a>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true">
+        <div class="text-center">
+        </div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                {% include "includes/menu.html" %}
+            </ul>
+        </div>
+    </div>
+
+
+
+    {% block  container %}
+        <div class="app-content content"
+
+             style="background-image: url({% static 'img/fondo.jpg' %});
+                     height: 100%;
+                     background-position: center;
+                     background-repeat: no-repeat;
+                     background-size: cover;"
+        >
+
+
+            <div class="container"
+
+            >
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12 ">
+                        <div class="content-wrapper mt-5">
+                            <div class="content-body text-center"
+                                 style="background-color: #08080894; padding: 20px 50px">
+                                <h1 class="text-white">TE DAMOS LA BIENVENIDA </h1>
+                                <h1 class="text-white"><strong>SISTEMA DE CERTIFICACIONES</strong></h1>
+                                {#                                <p style="font-size: 150px!important;">😷</p>#}
+                                {#                                <h2>DIRIS LIMA SUR</h2>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endblock container %}
+
+
+
+{% endblock main %}
+
+{% block static %}
+
+    <script type="application/javascript">
+
+        $("#id_numero_documento").keyup(function () {
+
+            const dni = $(this).val();
+            if (dni.length === 8) {
+                updateDataForm(dni);
+            } else {
+                $('#id_nombres').val("");
+                $('#id_apellido_paterno').val("");
+                $('#id_apellido_materno').val("");
+            }
+        });
+
+    </script>
+
+{% endblock %}
+

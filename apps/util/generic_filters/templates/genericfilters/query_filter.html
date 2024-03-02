@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% trans "Names" as default %}
+
+<div class="float-right col-md-12" style="padding: 0; margin-bottom: 1%" >
+    <form class="form-search " onsubmit="search_submit(); return false;"
+          type="GET">
+        <div class="input-group col-md-12" style="padding: 0;">
+            <input class="form-control" id="query" value="{{ form.query.value|default:'' }}"
+                   placeholder="{% firstof placeholder default %}"
+                   aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit">{% trans "Buscar" %}</button>
+            </div>
+        </div>
+    </form>
+</div>

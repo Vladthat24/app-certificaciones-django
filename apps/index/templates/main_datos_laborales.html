@@ -1,0 +1,70 @@
+{% extends 'dashboard.html' %}
+
+{% block  menu_datos_laborales %}
+    active  open
+{% endblock %}
+
+
+{% block  container %}
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-12 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Actualizar datos generales</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="content-main">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="card">
+
+                                <div class="card-body collapse show">
+
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link
+                                                    {% block  nav_experiencia_laboral_block %}{% endblock %}"
+                                               href="{% url 'legajo:datos-laborales-list' %}"
+                                               aria-controls="home" aria-selected="true">
+                                                Experiencia laboral
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link
+                                                    {% block  nav_experiencia_docencia_block %}{% endblock %}"
+                                               href="{% url 'legajo:labores-docencia-list' %}"
+                                               aria-controls="home" aria-selected="true">
+                                                Experiencia en docencia
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+
+                                    <div class="tab-content" id="myTabContent">
+
+                                        {% block  tabblock %}
+                                        {% endblock tabblock %}
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}

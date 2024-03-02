@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="RECLAMOS - DIRIS LIMA SUR">
+    <meta name="author" content="DIRIS TI">
+    <title>DIRIS LIMA SUR</title>
+
+    {#    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">#}
+    {#    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">#}
+    {#    <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">#}
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CQuicksand:300,400,500,700"
+          rel="stylesheet">
+    <!-- BEGIN VENDOR CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/vendors.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/vendors/css/forms/icheck/icheck.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/vendors/css/forms/icheck/custom.css' %}">
+    <!-- END VENDOR CSS-->
+    <!-- BEGIN MODERN CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/app.css' %}">
+    <!-- END MODERN CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/pages/login-register.css' %}">
+
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{% static 'img/favicon.ico' %}">
+
+    <style>
+        .alert {
+            width: 90% !important;
+        }
+    </style>
+
+
+</head>
+
+
+<body class="vertical-layout vertical-menu 1-column  bg-full-screen-image menu-expanded blank-page blank-page"
+      data-open="click" data-menu="vertical-menu" data-col="1-column">
+
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <section class="flexbox-container">
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                    <div class="col-md-4 col-10 box-shadow-2 p-0">
+                        <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
+                            <div class="card-header border-0">
+                                <div class="card-title text-center">
+                                    <img src="{% static 'img/logo_diris.png' %}" alt="logo" width="460"
+                                         class="img-fluid">
+                                </div>
+                                <h6 class="card-subtitle text-muted text-center pt-2">
+                                    <span class="font-weight-bold">SETI-RECLAMOS</span></h6>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1">
+                                    <span>Ingrese sus credenciales</span></p>
+                                <div class="card-body" style="border: 1px solid #1e9ff2;">
+
+                                    <form class="form-horizonta" novalidate action="{% url 'index:login' %}"
+                                          method="post" role="form">
+                                        {% csrf_token %}
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="text" class="form-control" id="user-name"
+                                                   placeholder="Ingrese el usuario" required name="username" maxlength="15">
+                                            <div class="form-control-position">
+                                                <i class="ft-user"></i>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="password" class="form-control" id="user-password"
+                                                   placeholder="Ingrese la contraseña" required name="password">
+                                            <div class="form-control-position">
+                                                <i class="la la-key"></i>
+                                            </div>
+                                        </fieldset>
+                                        <button type="submit" class="btn btn-info btn-block"><i
+                                                class="ft-unlock"></i> Acceder al sistema
+                                        </button>
+                                    </form>
+
+
+                                </div>
+
+{#                                <div class="card-body">#}
+{#                                    <div class="card-title text-center ">#}
+{#                                        <a class="text-danger" href="{% url 'index:password_reset' %}">#}
+{#                                            <i class="la la-empire"></i> Olvidé mi contraseña#}
+{#                                        </a>#}
+{#                                    </div>#}
+{#                                </div>#}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+{% include 'includes/login_index_js.html' %}
+
+</body>
+</html>

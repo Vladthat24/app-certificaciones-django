@@ -1,0 +1,75 @@
+{% if object_list %}
+    <div class="table-responsive">
+
+        <a class="btn btn-success btn-sm mb-2"
+           href="{% url 'reporte-excel:generar-excel' %}?fecha_inicio={{ fecha_inicio }}&fecha_final={{ fecha_final }}"
+           disabled="" id="generar">
+            <i class="la la-file-excel-o" style="font-size: 15px"></i> Generar Excel
+        </a>
+
+        <h2 class="text-info"> Cantidad de autorizaciones : <strong>{{ count }}</strong></h2>
+        <table class="table  mb-0">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Es Covid</th>
+                <th>N° Autorización</th>
+                <th>N° Expediente</th>
+                <th>Fecha de recepción</th>
+                <th>Solicitante</th>
+                <th>Fallecido</th>
+                <th>Dirección</th>
+                <th>Diagnóstico</th>
+                <th>Empresa (Crematorio)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>
+                        {% if object.solicitud.es_covid %}
+                            SI
+                        {% else %}
+                            NO
+                        {% endif %}
+                    </td>
+                    <td>{{ object.numero_autorizacion|default_if_none:"--" }}</td>
+                    <td>{{ object.solicitud.numero_expediente|default_if_none:"--" }}</td>
+                    <td>{{ object.solicitud.registrado_fecha|default_if_none:"--" }}</td>
+                    <td>{{ object.solicitante|default_if_none:"--" }}</td>
+                    <td>{{ object.fallecido_nombre|default_if_none:"--" }}</td>
+                    <td>{{ object.fallecido_direccion|default_if_none:"--" }}</td>
+                    <td>{{ object.motivo|default_if_none:"--" }}</td>
+                    <td>{{ object.solicitud.crematorio|default_if_none:"--" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% else %}
+    <div class="table-responsive text-center">
+        <h1 class="text-danger"> Sin Autorizaciones</h1>
+    </div>
+{% endif %}
+
+<script>
+    $("#generar").on('click', function () {
+        setTimeout(s => {
+            $("#generar").addClass("disabled");
+            $("#generar").text("Generando...")
+            $(".content-spinner").show();
+        }, 5)
+
+        setTimeout(s => {
+            $("#generar").removeClass("disabled");
+            $("#generar").text("Generar Excel")
+            $(".content-spinner").hide();
+        }, 3000)
+
+    })
+</script>
+
+

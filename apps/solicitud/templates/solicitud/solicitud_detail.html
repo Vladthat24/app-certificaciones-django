@@ -1,0 +1,717 @@
+{% extends 'dashboard.html' %}
+{% load  paginator i18n %}
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Solicitud</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                <h1><strong>{{ title }}</strong></h1>
+                            </div>
+                            <div class="card-body  ">
+
+                                <h4 class="form-section"><i class="ft-gitlab"></i> CREMATORIO</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Nombre:</label>
+                                        <div class="form-group">
+                                            <textarea type="text" name="" class="form-control" tabindex="1"
+                                                      disabled>{{ object.crematorio.nombre }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Dirección:</label>
+                                        <div class="form-group">
+                                            <textarea disabled
+                                                      class="form-control">{{ object.crematorio.direccion }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Departamento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.crematorio.distrito.province.name }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Provincia:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.crematorio.distrito.province.name }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Distrito:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.crematorio.distrito.name }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-user"></i> DATOS DEL SOLICITANTE</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Tipo de Documento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_solicitante_tipo_documento_display }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" id="content-id_solicitante_numero_documento">
+                                        <label for="">Número de documento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_numero_documento }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_nombres">
+                                        <label for="">Nombres:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_nombres }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_apellido_paterno">
+                                        <label for="">Apellido paterno:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_apellido_paterno }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_apellido_materno">
+                                        <label for="">Apellido materno:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_apellido_materno }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_estado_civil">
+                                        <label for="">Estado civil:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_solicitante_estado_civil_display }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_correo">
+                                        <label for="">Correo:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_correo|default_if_none:"--" }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_celular">
+                                        <label for="">Celular:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_celular|default_if_none:"--" }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_parentesco">
+                                        <label for="">Parentesco:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_solicitante_parentesco_display }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_direccion">
+                                        <label for="">Domicilio:</label>
+                                        <div class="form-group">
+                                            <textarea type="text" name="" class="form-control" tabindex="1"
+                                                      disabled>{{ object.solicitante_direccion|default_if_none:"--" }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_departamento_name">
+                                        <label for="">Departamento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_departamento_name }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_provincia_name">
+                                        <label for="">Provincia:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_provincia_name }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_solicitante_distrito_name">
+                                        <label for="">Distrito:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.solicitante_distrito_name }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <h4 class="form-section"><i class="la la-user-md"></i> DATOS DEL FALLECIDO</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Tipo documento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_fallecido_tipo_documento_display }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_numero_documento">
+                                        <label for="">Número de documento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_numero_documento }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_nombres">
+                                        <label for="">Nombres:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_nombres }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_apellido_paterno">
+                                        <label for="">Apellido paterno:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_apellido_paterno }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_apellido_materno">
+                                        <label for="">Apellido materno:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_apellido_materno }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_sexo">
+                                        <label for="">Género:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_fallecido_sexo_display }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_fecha_nacimiento">
+                                        <label for="">Fecha de nacimiento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_fecha_nacimiento }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_estado_civil">
+                                        <label for="">Estado civil:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_fallecido_estado_civil_display }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Fecha de defunción:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_fecha_fallecimiento }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" id="content-id_fallecido_parentesco">
+                                        <label for="">Parentesco:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_fallecido_parentesco_display }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Hora de fallecimiento:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fallecido_hora_fallecimiento }}" disabled>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3 form-group form-check" id="content-es_covid">
+                                        <label for="name"> Causa de muerte</label>
+                                        <span class="danger">*</span> </br>
+                                        <input type="radio" id="covid" name="es_covid" value="True"
+                                               class="form-check-input" required
+                                                {% if object.es_covid %}
+                                               checked
+                                                {% endif %} disabled>
+                                        <label for="covid" class="form-check-label"
+                                               style="font-size: 16px; width: 90px; color: #0d0d10 !important;">Covid</label>
+                                        <input type="radio" id="no_covid" name="es_covid" value="False"
+                                               class="form-check-input"
+                                                {% if not object.es_covid %}
+                                               checked
+                                                {% endif %} disabled>
+                                        <label for="no_covid" class="form-check-label"
+                                               style="font-size: 16px; color: #0d0d10 !important;">No Covid</label>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label for="">Número de necropsia:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.numero_necropsia }}" disabled>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label for="">Fecha de necropsia:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fecha_necropsia }}" disabled>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <h4 class="form-section"><i class="ft-map-pin"></i> LUGAR DE DEFUNCIÓN</h4>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Lugar:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.get_lugar_fallecimiento_tipo_display }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    {% if  object.lugar_fallecimiento_tipo == 1 %}
+                                        <div class="col-md-3">
+                                            <label for="">Hospital:</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control"
+                                                          disabled>{{ object.lugar_fallecimiento_hospital.nombre_establecimiento }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="">Dirección:</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control"
+                                                          disabled>{{ object.lugar_fallecimiento_hospital.direccion }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Departamento:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_hospital.distrito.province.department.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Provincia:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_hospital.distrito.province.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Distrito:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_hospital.distrito.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="col-md-3">
+                                            <label for="">Dirección:</label>
+                                            <div class="form-group">
+                                                <textarea class="form-control"
+                                                          disabled>{{ object.lugar_fallecimiento_direccion }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Departamento:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_distrito.province.department.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Provincia:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_distrito.province.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Distrito:</label>
+                                            <div class="form-group">
+                                                <input type="text" name="" class="form-control" tabindex="1"
+                                                       value="{{ object.lugar_fallecimiento_distrito.name }}"
+                                                       disabled>
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+                                </div>
+
+
+                                {% include 'includes/requisitos_solicitud.html' %}
+
+
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <label for="">Archivo adjunto PDF :</label>
+
+                                        <a href="/media/{{ object.archivo }}" target="_blank"
+                                           class="btn btn-info btn-sm"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Ver Requisitos escaneado, PDF">
+                                            <i class="la la-download"></i> Descargar archivo</a>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Constancia de depósito :</label>
+                                        {% if object.constancia_deposito %}
+                                            <a href="/media/{{ object.constancia_deposito }}" target="_blank"
+                                               class="btn btn-info btn-sm"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Ver Requisitos escaneado, PDF">
+                                                <i class="la la-download"></i> Descargar archivo</a>
+                                        {% else %}
+                                            <h3 class="text-danger">Sin constancia</h3>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+
+                                <h4 class="form-section mt-5"><i class="ft-cast"></i>CREMACIÓN</h4>
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label for="">Hora de cremación:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.hora_cremacion|default_if_none:"--" }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Fecha de cremación:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fecha_cremacion }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="">Fecha de deposito:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.fecha_deposito|default_if_none:"--" }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label for="">Número de depósito:</label>
+                                        <div class="form-group">
+                                            <input type="text" name="" class="form-control" tabindex="1"
+                                                   value="{{ object.numero_deposito|default_if_none:"--" }}"
+                                                   disabled>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label for="">Destino final de cenizas:</label>
+                                        <div class="form-group">
+                                                <textarea class="form-control"
+                                                          disabled>{{ object.destino_cenizas }}
+                                                </textarea>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="text-right">
+                                    {% if tipo_menu_acceso == 0 %}
+                                        <a type="" href="{% url 'solicitud:list' %}{{ referer }}"
+                                           class="btn  btn-danger form-button">Atrás</a>
+                                    {% elif tipo_menu_acceso == 1 %}
+                                        <a type="" href="{% url 'solicitud:list-observadas' %}{{ referer }}"
+                                           class="btn  btn-danger form-button">Atrás</a>
+                                    {% else %}
+                                        <a type="" href="{% url 'solicitud:list-tesoreria-validadas' %}{{ referer }}"
+                                           class="btn  btn-danger form-button">Atrás</a>
+                                    {% endif %}
+
+                                    {% if group == 4 %}
+                                        {% if object.get_certificado %}
+                                            <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                    data-target="#editModal" data-pk="{{ object.get_certificado.id }}">
+                                                <i class="fa fa-edit"></i> Editar Autorización
+                                            </button>
+                                            {% if object.es_covid %}
+                                                <a type="button" class="btn btn-dark"
+                                                   href="{% url  'certificacion:report' pk=object.get_certificado.id %}">
+                                                    <i class="fa fa-file-pdf-o"></i> Generar PDF
+                                                </a>
+                                            {% else %}
+                                                <a type="button" class="btn btn-dark"
+                                                   href="{% url  'certificacion:report-no-covid' pk=object.get_certificado.id %}">
+                                                    <i class="fa fa-file-pdf-o"></i> Generar PDF
+                                                </a>
+                                            {% endif %}
+
+                                        {% else %}
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#saveModal">
+                                                Autorizar
+                                            </button>
+                                        {% endif %}
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveModalLabel">Agregar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="conent-save">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveModalLabel">Editar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="conent-edit">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+
+
+        let datosSolicitanteValidacion = (tipo_documento) => {
+            if (tipo_documento === 5) {
+                $("#content-id_solicitante_numero_documento").hide();
+                $("#content-id_solicitante_nombres").hide();
+                $("#content-id_solicitante_apellido_paterno").hide();
+                $("#content-id_solicitante_apellido_materno").hide();
+                $("#content-id_solicitante_estado_civil").hide();
+                $("#content-id_solicitante_correo").hide();
+                $("#content-id_solicitante_celular").hide();
+                $("#content-id_solicitante_parentesco").hide();
+                $("#content-id_solicitante_direccion").hide();
+                $("#content-id_solicitante_departamento_name").hide();
+                $("#content-id_solicitante_provincia_name").hide();
+                $("#content-id_solicitante_distrito_name").hide();
+                $("#content-id_fallecido_parentesco").hide();
+            } else {
+                $("#content-id_solicitante_numero_documento").show();
+                $("#content-id_solicitante_nombres").show();
+                $("#content-id_solicitante_apellido_paterno").show();
+                $("#content-id_solicitante_apellido_materno").show();
+                $("#content-id_solicitante_estado_civil").show();
+                $("#content-id_solicitante_correo").show();
+                $("#content-id_solicitante_celular").show();
+                $("#content-id_solicitante_parentesco").show();
+                $("#content-id_solicitante_direccion").show();
+                $("#content-id_solicitante_departamento_name").show();
+                $("#content-id_solicitante_provincia_name").show();
+                $("#content-id_solicitante_distrito_name").show();
+                $("#content-id_fallecido_parentesco").show();
+            }
+
+        }
+
+
+        let datosFallecidoValidacion = (tipo_documento) => {
+            if (tipo_documento === 4) {
+                $("#content-id_fallecido_numero_documento").hide();
+                $("#content-id_fallecido_nombres").hide();
+                $("#content-id_fallecido_apellido_paterno").hide();
+                $("#content-id_fallecido_apellido_materno").hide();
+                $("#content-id_fallecido_sexo").hide();
+                $("#content-id_fallecido_fecha_nacimiento").hide();
+                $("#content-id_fallecido_estado_civil").hide();
+                $("#covid").hide();
+            } else {
+                $("#content-id_fallecido_numero_documento").show();
+                $("#content-id_fallecido_nombres").show();
+                $("#content-id_fallecido_apellido_paterno").show();
+                $("#content-id_fallecido_apellido_materno").show();
+                $("#content-id_fallecido_sexo").show();
+                $("#content-id_fallecido_fecha_nacimiento").show();
+                $("#content-id_fallecido_estado_civil").show();
+                $("#covid").show();
+            }
+        }
+    </script>
+
+    {% if object %}
+        <script type="application/javascript">
+            $(document).ready(function () {
+
+                var id_fallecido_tipo_documento = {{  object.fallecido_tipo_documento|safe }}
+                    datosFallecidoValidacion(id_fallecido_tipo_documento);
+
+                var id_solicitante_tipo_documento = {{  object.solicitante_tipo_documento|safe }}
+                    datosSolicitanteValidacion(id_solicitante_tipo_documento);
+
+
+            });
+        </script>
+    {% endif %}
+
+
+
+    <script type="application/javascript">
+
+
+        $('#saveModal').on('shown.bs.modal', function (e) {
+
+            save_form_show();
+        });
+
+
+        var save_form_show = () => {
+            $.ajax({
+                url: "{% url 'certificacion:new' solicitud_pk=object.id %}",
+                data: {
+                    {#lot_id: lot_id#}
+                },
+                success: function (data) {
+                    $("#conent-save").html(data);
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+        var edit_form_show = (id) => {
+            $.ajax({
+                url: "{% url 'certificacion:edit' solicitud_pk=object.id pk='x' %}".replace('x', id),
+                data: {},
+                success: function (data) {
+                    $("#conent-edit").html(data);
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+        $('#editModal').on('shown.bs.modal', function (e) {
+            var id = $(e.relatedTarget).data('pk');
+            {#const solicitud_pk =  $(e.relatedTarget).data('solicitud');#}
+            edit_form_show(id);
+        });
+
+    </script>
+
+{% endblock static %}

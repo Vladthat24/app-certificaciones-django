@@ -1,0 +1,20 @@
+<span class="badge badge_customized"
+
+        {% if value %}
+      style="background:  #c20a19;"
+        {% else %}
+      style="background:  #162b96;"
+        {% endif %}
+
+      data-toggle="tooltip"
+      data-placement="top" title=" {% if object.es_covid %}
+                                                                    Covid
+                                                                {% else %}
+                                                                    No Covid
+                                                                {% endif %}"
+
+> {% if value %}
+                                                                    Covid
+                                                                {% else %}
+                                                                    No Covid
+                                                                {% endif %} </span>

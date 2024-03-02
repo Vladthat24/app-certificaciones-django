@@ -1,0 +1,270 @@
+{% load widget_tweaks %}
+{% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+{% endfor %}
+{% for field in form.visible_fields %}
+    {% if field.name in hidden %}
+        {% render_field field class="hide" hidden="hidden" %}
+    {% endif %}
+    {% if include %}
+        {% if field.name in include %}
+            {% if field.field.widget.input_type == "checkbox" %}
+                <div class="custom-control custom-checkbox col-md-{{ col }}" id="content-{{ field.auto_id }}"
+                     style="padding-left: 40px; margin-top: 15px; margin-bottom: 15px;">
+                    {% if form.is_bound %}
+                        {% if field.errors %}
+                            {% render_field field class="is-invalid" %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field field class="custom-control-input is-valid" %}
+                        {% endif %}
+                    {% else %}
+                        {% if forloop.counter == 1 and start_tabindex == 0 %}
+                            {% render_field field class+="custom-control-input" tabindex=forloop.counter autofocus="true" %}
+                        {% else %}
+                            {% render_field field class+="custom-control-input" tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% endif %}
+                    <label class="custom-control-label" for="{{ field.auto_id }}">{{ field.label }}
+
+                     {% if field.field.required %}
+                        <span class="danger">*</span>
+                    {% endif %}
+                    </label>
+
+
+
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% else %}
+
+
+                <div class="col-md-{{ col }}" id="content-{{ field.auto_id }}" >
+                {{ field.label_tag }}
+                {% if field.field.required %}
+                    <span class="danger">*</span>
+                {% endif %}
+
+
+
+
+
+                {% if field.field.widget.attrs.group %}
+                    <div class="input-group ">
+                {% else %}
+                    <div class="form-group ">
+                {% endif %}
+
+            {% if form.is_bound %}
+                {% if field.errors %}
+                    {% render_field field class="form-control is-invalid" %}
+                    {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% render_field field class="form-control is-valid" %}
+                {% endif %}
+            {% else %}
+                {% if forloop.counter == 1 and start_tabindex == 0 %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control multiselectChekbox" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% else %}
+                                {% render_field field class+="form-control multiselect" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter autofocus="true" type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control" tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control multiselectChekbox" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% else %}
+                                {% render_field field class+="form-control multiselect" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter|add:start_tabindex type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control" tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% if field.field.widget.attrs.group %}
+                <div class="input-group-append">
+                    <span class="input-group-text">{{ field.field.widget.attrs.group }}</span>
+                </div>
+            {% endif %}
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            </div>
+            </div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if field.name not in exclude and field.name not in hidden %}
+            <div class="col-md-{{ col }}" id="content-{{ field.auto_id }}" >
+            {{ field.label_tag }}
+            {% if field.field.required %}
+                <span class="danger">*</span>
+            {% endif %}
+
+            {% if field.field.widget.input_type == "checkbox" %}
+                <div class="custom-control custom-checkbox "
+                     style="padding-left: 40px; margin-top: 15px; margin-bottom: 15px;">
+                    {% if form.is_bound %}
+                        {% if field.errors %}
+                            {% render_field field class="is-invalid" %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field field class="custom-control-input is-valid" %}
+                        {% endif %}
+                    {% else %}
+                        {% if forloop.counter == 1 and start_tabindex == 0 %}
+                            {% render_field field class+="custom-control-input" tabindex=forloop.counter autofocus="true" %}
+                        {% else %}
+                            {% render_field field class+="custom-control-input" tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% endif %}
+                    <label class="custom-control-label" for="{{ field.auto_id }}">{{ field.label }}
+                    {% if field.field.required %}
+                        <span class="danger">*</span>
+                    {% endif %}
+                    </label>
+
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% if field.field.widget.attrs.group %}
+                    <div class="input-group">
+                {% else %}
+                    <div class="form-group">
+                {% endif %}
+            {% if form.is_bound %}
+                {% if forloop.counter == 1 and start_tabindex == 0 %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control is-invalid multiselectChekbox" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% else %}
+                                {% render_field field class+="form-control is-invalid multiselect" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control is-invalid " tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control  is-invalid " tabindex=forloop.counter autofocus="true" type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control is-invalid" tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control is-invalid multiselectChekbox" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% else %}
+                                {% render_field field class+="form-control is-invalid multiselect" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control is-invalid " tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control is-invalid " tabindex=forloop.counter|add:start_tabindex type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control is-invalid" tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+            {% else %}
+                {% if forloop.counter == 1 and start_tabindex == 0 %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control multiselectChekbox" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% else %}
+                                {% render_field field class+="form-control multiselect" tabindex=forloop.counter multiple="multiple" autofocus="true" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter autofocus="true" type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control" tabindex=forloop.counter autofocus="true" %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if  field.field.widget.input_type == "select" %}
+                        {% if multiselect %}
+                            {% if select_type == "chekbox" %}
+                                {% render_field field class+="form-control multiselectChekbox" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% else %}
+                                {% render_field field class+="form-control multiselect" tabindex=forloop.counter|add:start_tabindex multiple="multiple" %}
+                            {% endif %}
+                        {% else %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% else %}
+                        {% if field|field_type == 'datefield' %}
+                            {% render_field field class+="form-control " tabindex=forloop.counter|add:start_tabindex type="date" %}
+                        {% else %}
+                            {% render_field field class+="form-control" tabindex=forloop.counter|add:start_tabindex %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% if field.field.widget.attrs.group %}
+                <div class="input-group-append">
+                    <span class="input-group-text">{{ field.field.widget.attrs.group }}</span>
+                </div>
+            {% endif %}
+
+            {% for error in field.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
+{% endfor %}

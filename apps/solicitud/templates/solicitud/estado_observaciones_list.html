@@ -1,0 +1,67 @@
+{% for i in solicitud.estados.all %}
+
+    <div class="card" style="margin-bottom: 0 !important; border: 10px solid #fff;">
+        <div class="row"
+             style="background-color: #450eec2e; margin-right: 0 !important; margin-left: 0 !important;  padding-top: 1%;padding-bottom: 1%">
+            <div class="col-1 text-center" style="padding-top: 3%">
+                <h1>{{ forloop.counter }} .-</h1>
+            </div>
+            <div class="col-5">
+                <div class="card bg-danger" style="margin-bottom: 0 !important;">
+                    <div class="card-header text-white" style="padding: 2px !important; ">
+                        Observación
+                    </div>
+                    <div class="card-content">
+
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-white text-left">
+                                    <h3 class="text-white">USUARIO: {{ i.created_by }} -
+                                        <small>{{ i.created_at }}</small>
+                                    </h3>
+                                    <p style="background-color: #fff; padding: 1%"
+                                       class="text-dark">{{ i.observacion }}</p>
+
+                                    {% if i.observacion_archivo %}
+                                        <a href="/media/{{ i.observacion_archivo }}" class="btn btn-dark"
+                                           target="_blank"> Descargar archivo </a>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card bg-info" style="margin-bottom: 0 !important;">
+                    <div class="card-header text-white" style="padding: 2px !important; ">
+                        Descargo
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            {% if i.descargo %}
+                                <div class="media d-flex">
+                                    <div class="media-body text-white text-left">
+                                        <h3 class="text-white"><small>{{ i.updated_at }}</small></h3>
+                                        <p style="background-color: #fff; padding: 1%"
+                                           class="text-dark">{{ i.descargo }}</p>
+                                        {% if i.descargo_archivo %}
+                                            <a href="/media/{{ i.descargo_archivo }}" class="btn btn-dark"
+                                               target="_blank"> Descargar archivo </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <h1 class="text-white"> SIN DESCARGO</h1>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+

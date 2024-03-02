@@ -1,0 +1,8 @@
+
+sudo npx webpack --config webpack.config.js --watch
+
+
+https://github.com/django-webpack/django-webpack-loader
+
+
+https://www.codigojs.com/django-framework/integrar-django-3-con-vue-3/

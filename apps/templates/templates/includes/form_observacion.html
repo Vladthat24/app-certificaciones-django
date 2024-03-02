@@ -1,0 +1,79 @@
+<div class="modal fade" id="estadoObservacionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Observación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="conent-estado-observado">
+            </div>
+            <form id="formEstadoObservacion" class="was-validated form-validate" enctype="multipart/form-data"
+                  method="POST"
+                    {% if group > 1 %}
+                  action="{% url  'solicitud:observar' %}"
+                    {% else %}
+                  action="{% url 'solicitud:levantar-observacion' %}"
+                    {% endif %}>
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="col-md-12 mb-1 mt-1">
+                            <input name="solicitud_id" class="solicitud_id" hidden>
+                        </div>
+                        {% if group > 1 %}
+                            <div id="content-observaciones" class="col-md-12">
+                                <div class="col-md-12">
+                                    <label for="observaciones">Observaciones:</label>
+                                    <div class="form-group ">
+                                        <textarea type="text" name="observaciones" rows="3" required
+                                                  maxlength="650" class="form-control" id="observaciones">“Por la presente y en el marco del artículo 55 del Reglamento de la Ley Nro 26298, Ley de Cementerios y Servicios Funerarios, modificados mediante Decreto Supremo N° 031-2021—SA se notifica que vuestro, expediente perteneciente al cadáver de ……………………………..., con diagnostico NO COVID, no cuenta con el documento ……………………………………. que es requisito indispensable para otorgar la autorización sanitaria solicitada, por lo que se le otorga un plazo máximo de 24 horas para presentar dicha documentación bajo apercibimiento de declarar improcedente vuestra solicitud”</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="archivo">Archivo:</label>
+                                    <div class="form-group ">
+                                        <input name="archivo" id="archivo" type="file">
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div id="content-observaciones" class="col-md-12">
+                                <div class="col-md-12">
+                                    <label for="descargo">Levantar observación::</label>
+                                    <div class="form-group ">
+                                        <textarea type="text" name="descargo" rows="3" required
+                                                  maxlength="350" class="form-control" id="descargo"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="archivo">Archivo:</label>
+                                    <div class="form-group ">
+                                        <input name="archivo" id="archivo" type="file">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar (Salir)</button>
+                    {% if group > 1 %}
+                        <button type="submit" class="btn btn-danger form-button btnSubmit">
+                            Confirmar observación
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-danger form-button btnSubmit">
+                            Presentar descargo
+                        </button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

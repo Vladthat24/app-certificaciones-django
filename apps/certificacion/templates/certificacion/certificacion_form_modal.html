@@ -1,0 +1,57 @@
+<form class="text-left was-validated form-validate" method="POST"
+      enctype="multipart/form-data" autocomplete="off"
+        {% if    form.instance.pk %}
+      action="/certificacion/{{ solicitud.id }}/edit/{{ form.instance.pk }}"
+        {% else %}
+      action="{% url 'certificacion:new' solicitud.id %}"
+        {% endif %} >
+    {% csrf_token %}
+
+    <div class="modal-body">
+        <div class="form-row">
+            <input name="referer" value="{{ referer }}" hidden>
+            <div class="col-md-6" id="content-fecha">
+                <label for="fecha">Fecha de recepción por mesa de partes virtual:</label>
+                <div class="form-group">
+                    <input type="text" name="fecha" value="{{ solicitud.registrado_fecha }}" maxlength="15"
+                           class="form-control"
+                           tabindex="2" required="" id="fecha" disabled>
+                </div>
+            </div>
+
+            <div class="col-md-6" id="content-numero">
+                <label for="numero">Número de expediente:</label>
+                <div class="form-group">
+                    <input type="text" name="numero" value="{{ solicitud.numero_expediente }}" maxlength="15"
+                           class="form-control"
+                           tabindex="2" required="" id="numero" disabled>
+                </div>
+            </div>
+
+            {% include 'includes/bs4_form.html' with form=form col=6 include='' exclude='' start_tabindex="0" hidden=list_hidden %}
+
+            <div class="col-md-12">
+                <label for="comprobante">Comprobante de pago:</label>
+                {% if solicitud.comprobante %}
+                    <a href="/media/{{ solicitud.comprobante }}" target="_blank"
+                       class="btn btn-info btn-sm m-2"
+                       data-toggle="tooltip" data-placement="top"
+                       title="Comprobante de pago ">
+                        <i class="la la-download"></i>
+                        Descargar comprobante </a>
+                {% endif %}
+                <div class="form-group">
+                    <input type="file" name="comprobante" value="" maxlength="15"
+                           class="form-control" tabindex="6" id="comprobante">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+
+</form>

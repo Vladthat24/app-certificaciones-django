@@ -1,0 +1,16 @@
+@import url('bootstrap-extended.css');
+@import url('colors.css');
+@import url('components.css');
+
+
+.amount {
+    background-color: black !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;;
+}
+
+#project-main {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+}

@@ -1,0 +1,163 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block  container %}
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.bootstrap4.css' %}">
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Configuraciones</li>
+                                <li class="breadcrumb-item active">Usuarios</li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url 'usuario:list' %}">Todos los usuarios</a></li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}</h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <form class="text-left was-validated form-validate" method="POST">
+                                        {% csrf_token %}
+
+                                        <div class="form-row">
+                                            {% if form.instance.id %}
+                                                <div class="col-md-4">
+                                                    <label for="id_person-username">Contraseña:</label>
+                                                    <div class="form-group">
+                                                        <a href="{% url 'usuario:password' form.instance.id %}"
+                                                           class="btn btn-warning ">Cambiar contraseña</a>
+                                                    </div>
+                                                </div>
+                                                {% include 'includes/bs4_form.html' with form=form col=4 exclude='entidad ris' start_tabindex="1" hidden="last_login is_superuser  user_permissions is_staff password" multiselect="multiselect" select_type="chekbox" %}
+
+                                                <div id="content-entidad" class="col-md-4">
+                                                    {% include 'includes/bs4_form.html' with form=form col=12 exclude='' start_tabindex="1" hidden="" include="entidad" %}
+                                                </div>
+
+                                                <div id="content-ris" class="col-md-4">
+                                                    {% include 'includes/bs4_form.html' with form=form col=12 exclude='' start_tabindex="1" hidden="" include="ris" %}
+                                                </div>
+
+
+                                            {% else %}
+                                                {% include 'includes/bs4_form.html' with form=form col=4 exclude='entidad ris' start_tabindex="1" hidden="last_login is_superuser  user_permissions is_staff" multiselect="multiselect" select_type="chekbox" %}
+                                                <div id="content-entidad" class="col-md-4">
+                                                    {% include 'includes/bs4_form.html' with form=form col=12 exclude='' start_tabindex="1" hidden="" include="entidad" %}
+                                                </div>
+
+                                                <div id="content-ris" class="col-md-4">
+                                                    {% include 'includes/bs4_form.html' with form=form col=12 exclude='' start_tabindex="1" hidden="" include="ris" %}
+                                                </div>
+                                            {% endif %}
+
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="text-right">
+                                                <a type="button" href="{% url 'usuario:list' %}"
+                                                   class="btn  btn-danger form-button">Cancelar</a>
+                                                <button type="submit" class="btn btn-success form-button btnSubmit">
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+    <script src="{% static 'js/selectize.js' %} "></script>
+    <script src="{% static 'js/main_select.js' %} "></script>
+
+    {% if form.instance.id %}
+        {% autoescape off %}
+            <script type="application/javascript">
+                window.addEventListener("load", function (event) {
+                    const grupos = {{ groups|safe }}
+                        grupos.forEach(element => {
+                            if (element === "Administrador IPRESS") {
+                                $("#content-entidad").show();
+                            }
+                            if (element === "Administrador RIS") {
+                                $("#content-ris").show();
+                            }
+                        });
+                });
+            </script>
+        {% endautoescape %}
+
+    {% endif %}
+
+    <script type="application/javascript">
+
+        $("#content-entidad").hide();
+        $("#content-ris").hide();
+
+        setTimeout(function () {
+            $('#id_password').get(0).type = 'password';
+        }, 500);
+
+        $('#id_entidad').selectize({
+            create: true,
+            sortField: {
+                field: 'text',
+                direction: 'asc'
+            },
+            dropdownParent: 'body'
+        });
+
+
+        window.addEventListener("load", function (event) {
+
+            $("#id_groups").change(function () {
+                $("#content-entidad").hide();
+                $("#content-ris").hide();
+                $("#id_groups option:selected").each(function () {
+                    const value = $(this).text();
+                    if (value === "Administrador IPRESS") {
+                        $("#content-entidad").show();
+                    }
+                    if (value === "Administrador RIS") {
+                        $("#content-ris").show();
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+
+
+
+    {#    <script src="{% static 'js/jquery.min.js' %} "></script>#}
+
+
+
+    {#        {% include 'includes/ubigeo_js.html' with form=form object=person %}#}
+
+{% endblock static %}

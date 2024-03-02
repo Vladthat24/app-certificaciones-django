@@ -1,0 +1,95 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block main %}
+    <div id="app">
+
+        <div class="app-content text-center">
+            <div class="content-wrapper justify-content-center m-5">
+
+                <div class="content-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1><strong> Lista TUPA </strong></h1>
+                                </div>
+                                <div class="card-body text-justify">
+
+                                    <div class="list-group">
+                                        <a href="{% url 'solicitud:crear-token' 'traslado' %}"
+                                           class="list-group-item list-group-item-action flex-column align-items-start ">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="text-bold-600 ">Solicitud de traslado de Cadaver</h5>
+                                                <small> 50 Soles </small>
+                                            </div>
+                                            <p>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
+                                                risus varius blandit.</p>
+                                            <small>Donec id elit non mi porta.</small>
+                                        </a>
+                                        <a href="#"
+                                           class="list-group-item list-group-item-action flex-column align-items-start">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="text-bold-600">List group item heading</h5>
+                                                <small class="text-muted">3 days ago</small>
+                                            </div>
+                                            <p>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
+                                                risus varius blandit.</p>
+                                            <small class="text-muted">Donec id elit non mi porta.</small>
+                                        </a>
+                                        <a href="#"
+                                           class="list-group-item list-group-item-action flex-column align-items-start">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="text-bold-600">List group item heading</h5>
+                                                <small class="text-muted">3 days ago</small>
+                                            </div>
+                                            <p>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
+                                                risus varius blandit.</p>
+                                            <small class="text-muted">Donec id elit non mi porta.</small>
+                                        </a>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{#        <div class="app-content content">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{#                    <div class="text-center">#}
+{##}
+{#                        Lista de tipos de solicitud#}
+{##}
+                        {#                    <a href="{% url 'solicitud:notify-create' %}">#}
+                        {#                        Notificar create#}
+                        {#                    </a>#}
+{#                        <h1>#}
+{#                            <a href="{% url 'solicitud:crear-token' 'traslado' %}" rel="noreferrer">#}
+{#                                Solicitud Traslado </a>#}
+{#                        </h1>#}
+{#                        <h1>#}
+{#                            <a href="{% url 'solicitud:crear-token' 'traslado' %}" rel="noreferrer">#}
+{#                                Solicitud 2 </a>#}
+{#                        </h1>#}
+{#                        <h1>#}
+{#                            <a href="{% url 'solicitud:crear-token' 'traslado' %}" rel="noreferrer">#}
+{#                                Solicitud 3 OTROS </a>#}
+{#                        </h1>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    </div>
+{% endblock main %}
+
+{% block static %}
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+{% endblock static %}

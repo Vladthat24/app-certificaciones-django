@@ -1,0 +1,1195 @@
+{% extends 'dashboard.html' %}
+{% block  container %}
+
+    <style>
+        #solicitante_validation_text {
+            font-size: 12px !important;
+        }
+
+        #id_fallecido_hora_fallecimiento-error {
+            display: none !important;
+        }
+
+        .custom-control-label::before {
+            width: 2rem !important;
+            height: 2rem !important;
+        }
+
+        .custom-control-label::after {
+            width: 2rem !important;
+            height: 2rem !important;
+        }
+
+        .custom-checkbox {
+            font-size: 20px !important;
+        }
+
+        .was-validated .custom-control-input:valid ~ .custom-control-label::before, .custom-control-input.is-valid ~ .custom-control-label::before {
+            background-color: #8a8781;
+        }
+
+        .content-spinner {
+            height: 275%;
+        }
+    </style>
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-12 col-12">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Solicitud</li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url 'solicitud:list' %}">Todas las solicitudes</a></li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1><strong>{{ title }}</strong></h1>
+                                </div>
+                                <div class="card-body  ">
+                                    <form id="solicitud-form" class="was-validated form-validate"
+                                          enctype="multipart/form-data" method="POST">
+                                        {% csrf_token %}
+                                        <div hidden>
+                                            <input name="referer" value="{{ referer }}" hidden>
+                                            {% include 'includes/bs4_form.html' with form=form col=4 include=list_hiden exclude=""  start_tabindex=0 hidden="" %}
+                                            {% include 'includes/bs4_form.html' with form=form col=4 include="tipo solicitante_distrito estado_solicitud estado_solicitud_obs fecha_expediente tesoreria_valid pendiente_fecha registrado_fecha observado_fecha autorizado_fecha numero_expediente estado_observado fecha_envio" exclude=""  start_tabindex=0 hidden="" %}
+                                        </div>
+
+
+                                        <h4 class="form-section"><i class="ft-user"></i>DATOS DEL SOLICITANTE</h4>
+                                        <div class="row">
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include=list_inputs_datos_personales exclude=""  start_tabindex=0 hidden="" %}
+                                        </div>
+
+                                        <h4 class="form-section">
+                                            <i class="la la-user-md" style="font-size: 30px !important;"></i>
+                                            DATOS DEL FALLECIDO
+                                        </h4>
+
+                                        <div class="row">
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include=list_inputs_datos_fallecido exclude=""  start_tabindex=0 hidden="" %}
+
+                                            <div class="col-md-2">
+                                                <label for="id_name">Hora de fallecimiento:</label>
+                                                <div class="form-group">
+                                                    <div class="input-group date" id="datetimepicker"
+                                                         data-target-input="nearest">
+                                                        <input type="text" name="fallecido_hora_fallecimiento"
+                                                               autocomplete="off"
+                                                               id="id_fallecido_hora_fallecimiento"
+                                                               required
+
+                                                                {% if form.fallecido_hora_fallecimiento.value %}
+                                                               value="{{ form.fallecido_hora_fallecimiento.value }}"
+                                                                {% endif %}
+
+                                                               data-toggle="datetimepicker"
+                                                               class="form-control datetimepicker-input"
+                                                               data-target="#datetimepicker"/>
+                                                        <div class="input-group-append"
+                                                             data-target="#datetimepicker"
+                                                             data-toggle="datetimepicker">
+                                                            <div class="input-group-text">
+                                                                <i class="la la-clock-o"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-3 form-group form-check" id="content-es_covid"
+                                                 style="padding: 1px 36px;">
+                                                <label for="name"> Causa de muerte</label>
+                                                <span class="danger">*</span> </br>
+
+                                                {% if form.instance.pk %}
+                                                    <input type="radio" id="covid" name="es_covid" value="True"
+                                                           class="form-check-input" required
+                                                            {% if form.instance.es_covid %}
+                                                           checked
+                                                            {% endif %}>
+                                                    <label for="covid" class="form-check-label" id="label_covid"
+                                                           style="font-size: 16px; width: 90px; color: #0d0d10 !important;">Covid</label>
+                                                    <input type="radio" id="no_covid" name="es_covid" value="False"
+                                                           class="form-check-input"
+                                                            {% if not form.instance.es_covid %}
+                                                           checked
+                                                            {% endif %} >
+                                                    <label for="no_covid" class="form-check-label" id="label_no_covid"
+                                                           style="font-size: 16px; color: #0d0d10 !important;">No
+                                                        Covid</label>
+
+                                                {% else %}
+
+                                                    <input type="radio" id="covid" name="es_covid" value="True"
+                                                           class="form-check-input"
+                                                            {% if form.es_covid.value == True %}
+                                                           checked
+                                                            {% endif %}
+                                                           required>
+                                                    <label for="covid" class="form-check-label" id="label_covid"
+                                                           style="font-size: 16px; width: 90px; color: #0d0d10 !important;">Covid</label>
+                                                    <input type="radio" id="no_covid" name="es_covid" value="False"
+                                                           class="form-check-input"
+                                                            {% if form.es_covid.value == False %}
+                                                           checked
+                                                            {% endif %}
+                                                    >
+                                                    <label for="no_covid" class="form-check-label" id="label_no_covid"
+                                                           style="font-size: 16px; color: #0d0d10 !important;">No
+                                                        Covid</label>
+                                                {% endif %}
+
+                                            </div>
+
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include=list_inputs_datos_fallecido_others exclude=""  start_tabindex=10 hidden="" %}
+
+
+                                        </div>
+                                        <h4 class="form-section"><i class="ft-map-pin"></i>LUGAR DE DEFUNCIÓN</h4>
+
+                                        <div class="row">
+
+
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include=list_inputs_lugar_fallecimiento exclude=""  start_tabindex=0 hidden="" %}
+
+                                            <input name="hospital_id" id="hospital_id" type="number"
+
+                                                    {% if form.hospital_id.value %}
+                                                   value="{{ form.hospital_id.value }}"
+                                                    {% endif %}
+                                                   hidden
+                                            >
+                                            <div class="ui-widget col-md-3" id="content-hospital">
+                                                <label for="hospital">Buscar Hospital: </label>
+                                                <div class="form-group">
+                                                    <input class="form-control" id="hospital" name="hospital"
+                                                            {% if hospital %}
+                                                           value="{{ hospital.nombre_establecimiento }}"
+                                                            {% else %}
+                                                                {% if form.hospital.value %}
+                                                           value="{{ form.hospital.value }}"
+                                                                {% endif %}
+                                                            {% endif %}
+                                                    >
+                                                </div>
+                                            </div>
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include=list_inputs_lugar_fallecimiento_others exclude=""  start_tabindex=0 hidden="" %}
+                                            <div class="col-md-3" id="content-direccion_hospital">
+                                                <label for="id_direccion_hospital">Dirección:</label>
+
+                                                <div class="form-group ">
+                                                    <textarea type="text" name="direccion_hospital" rows="4"
+                                                              maxlength="800" class="form-control"
+                                                              required="" readonly
+                                                              id="id_direccion_hospital">{% if form.direccion_hospital.value %}
+                                                        {{ form.direccion_hospital.value }}{% endif %}</textarea>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-3" id="content-departamento_hospital">
+                                                <label for="id_departamento_hospital">Departamento:</label>
+                                                <div class="form-group ">
+                                                    <input type="text" name="departamento_hospital"
+                                                           maxlength="200" class="form-control" readonly
+                                                           required="" id="id_departamento_hospital"
+                                                            {% if form.departamento_hospital.value %}
+                                                           value="{{ form.departamento_hospital.value }}"
+                                                            {% endif %}>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" id="content-provincia_hospital">
+                                                <label for="id_provincia_hospital">Provincia:</label>
+                                                <div class="form-group ">
+                                                    <input type="text" name="provincia_hospital"
+                                                           maxlength="200" class="form-control" readonly
+                                                           required="" id="id_provincia_hospital"
+                                                            {% if form.provincia_hospital.value %}
+                                                           value="{{ form.provincia_hospital.value }}"
+                                                            {% endif %}>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3" id="content-distrito_hospital">
+                                                <label for="id_distrito_hospital">Distrito:</label>
+                                                <div class="form-group ">
+                                                    <input type="text" name="distrito_hospital"
+                                                           maxlength="200" class="form-control" readonly
+                                                           required="" id="id_distrito_hospital"
+                                                            {% if form.distrito_hospital.value %}
+                                                           value="{{ form.distrito_hospital.value }}"
+                                                            {% endif %}>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-3 form-group" id="content-fallecido_departamento">
+                                                <label for="name"> Departamento</label>
+                                                <span class="danger">*</span>
+                                                <select name="fallecido_departamento"
+                                                        id="fallecido_departamento"
+                                                        class="form-control"
+                                                        data-msg="Seleccione un departamento." type="number"
+                                                        required>
+                                                    {% for d in departments %}
+                                                        <option value="{{ d.id }}"
+                                                                {% if d.id == fallecido_departamento.id %}
+                                                                selected
+                                                                {% endif %}>
+                                                            {{ d.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 form-group" id="content-fallecido_provincia">
+                                                <label for="name"> Provincia</label>
+                                                <span class="danger">*</span>
+                                                <select name="fallecido_provincia" id="fallecido_provincia"
+                                                        class="form-control"
+                                                        data-msg="Seleccione una provincia" type="number"
+                                                        required>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 form-group" id="content-fallecido_distrito">
+                                                <label for="id_lugar_fallecimiento_distrito"> Distrito </label>
+                                                <span class="danger">*</span>
+                                                <select name="lugar_fallecimiento_distrito"
+                                                        id="id_lugar_fallecimiento_distrito"
+                                                        class="form-control"
+                                                        data-msg="Seleccione un distrito" type="number"
+                                                        required>
+                                                </select>
+                                            </div>
+                                            <input name="temp_province_state_fallecido" type="checkbox"
+                                                   id="temp_province_state_fallecido"
+                                                   hidden
+                                                    {% if fallecido_provincia %}
+                                                   checked
+                                                    {% endif %}>
+                                        </div>
+
+                                        {% include 'includes/requisitos_solicitud.html' %}
+
+
+                                        {% if form.instance.pk %}
+                                            <div class="row">
+                                                {% include 'includes/bs4_form.html' with form=form col=8 include='archivo constancia_deposito' start_tabindex="6" hidden="" %}
+                                            </div>
+                                        {% endif %}
+
+                                        <h4 class="form-section"><i class="ft-cast"></i>CREMACIÓN</h4>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="id_name">Hora de cremación:</label>
+                                                <div class="form-group">
+                                                    <div class="input-group date" id="datetimepickercremacion"
+                                                         data-target-input="nearest">
+                                                        <input type="text" name="hora_cremacion"
+                                                               autocomplete="off"
+                                                               id="id_hora_cremacion"
+                                                               required
+                                                                {% if form.hora_cremacion.value %}
+                                                               value="{{ form.hora_cremacion.value }}"
+                                                                {% endif %}
+                                                               data-toggle="datetimepicker"
+                                                               class="form-control datetimepicker-input"
+                                                               data-target="#datetimepickercremacion"/>
+                                                        <div class="input-group-append"
+                                                             data-target="#datetimepickercremacion"
+                                                             data-toggle="datetimepicker">
+                                                            <div class="input-group-text">
+                                                                <i class="la la-clock-o"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include='fecha_cremacion numero_deposito fecha_deposito destino_cenizas' exclude=""  start_tabindex=20 hidden="" %}
+                                        </div>
+
+                                        <div class="row" hidden>
+                                            {% include 'includes/bs4_form.html' with form=form col=3 include='estado' exclude=""  start_tabindex=20 hidden="" %}
+                                        </div>
+                                        <div class="text-right">
+                                            <a type="" href="{% url 'solicitud:list' %}"
+                                               class="btn  btn-danger form-button">Cancelar</a>
+                                            <button type="submit" class="btn btn-success form-button btnSubmit"
+                                                    id="guardar-solicitud">
+                                                Guardar
+                                            </button>
+
+                                            {#                                            {% if form.instance.pk %}#}
+                                            {#                                                <button type="button" class="btn btn-warning" data-toggle="modal"#}
+                                            {#                                                        data-target="#derivarModal">#}
+                                            {#                             no_covid                       <i class="fa fa-edit"></i> Derivar Documento#}
+                                            {#                                                </button>#}
+                                            {#                                            {% endif %}#}
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock container %}
+
+{% block static %}
+
+
+
+    <script type="application/javascript">
+
+
+        let validImputs = () => {
+            $("form#solicitud-form :input").each(function () {
+                var input = $(this);
+                if (input.val()) {
+                    $("#" + input.attr('id') + "-error").hide();
+                }
+
+            });
+        }
+
+        {#$("#no_covid").on('change', function () {#}
+        {#    $("#id_numero_necropsia").prop('required', true);#}
+        {#    $("#id_fecha_necropsia").prop('required', true);});#}
+        {##}
+        {#$("#covid").on('change', function () {#}
+        {#    $("#id_numero_necropsia").prop('required', false);#}
+        {#    $("#id_fecha_necropsia").prop('required', false);});#}
+
+
+
+        let datosFallecidoValidacion = (tipo_documento) => {
+
+            var required = true
+            if (tipo_documento === 4) {
+                required = false
+                $("#content-id_fallecido_numero_documento").hide();
+                $("#content-id_fallecido_nombres").hide();
+                $("#content-id_fallecido_apellido_paterno").hide();
+                $("#content-id_fallecido_apellido_materno").hide();
+                $("#content-id_fallecido_sexo").hide();
+                $("#content-id_fallecido_fecha_nacimiento").hide();
+                $("#content-id_fallecido_estado_civil").hide();
+                $("#no_covid").prop("checked", true);
+                $("#covid").hide();
+                $("#label_covid").hide();
+            } else {
+                $("#content-id_fallecido_numero_documento").show();
+                $("#content-id_fallecido_nombres").show();
+                $("#content-id_fallecido_apellido_paterno").show();
+                $("#content-id_fallecido_apellido_materno").show();
+                $("#content-id_fallecido_sexo").show();
+                $("#content-id_fallecido_fecha_nacimiento").show();
+                $("#content-id_fallecido_estado_civil").show();
+                $("#covid").show();
+                $("#label_covid").show();
+            }
+
+            $("#id_fallecido_numero_documento").prop('required', required);
+            $("#id_fallecido_nombres").prop('required', required);
+            $("#id_fallecido_apellido_paterno").prop('required', required);
+            $("#id_fallecido_apellido_materno").prop('required', required);
+            $("#id_fallecido_sexo").prop('required', required);
+            $("#id_fallecido_fecha_nacimiento").prop('required', required);
+            $("#id_fallecido_estado_civil").prop('required', required);
+        }
+
+
+        {#-------- Valid tipo de documento SOlicitante #}
+
+        let datosSolicitanteValidacion = (tipo_documento) => {
+
+            var required = true;
+
+            if (tipo_documento === 5) {
+                required = false
+                $("#content-id_solicitante_numero_documento").hide();
+                $("#content-id_solicitante_nombres").hide();
+                $("#content-id_solicitante_apellido_paterno").hide();
+                $("#content-id_solicitante_apellido_materno").hide();
+                $("#content-id_solicitante_estado_civil").hide();
+                $("#content-id_solicitante_correo").hide();
+                $("#content-id_solicitante_celular").hide();
+                $("#content-id_solicitante_parentesco").hide();
+                $("#content-id_solicitante_direccion").hide();
+                $("#content-id_solicitante_departamento_name").hide();
+                $("#content-id_solicitante_provincia_name").hide();
+                $("#content-id_solicitante_distrito_name").hide();
+                $("#content-id_fallecido_parentesco").hide();
+                $("#covid").prop("checked", true);
+                $("#no_covid").hide();
+                $("#label_no_covid").hide();
+            } else {
+                $("#content-id_solicitante_numero_documento").show();
+                $("#content-id_solicitante_nombres").show();
+                $("#content-id_solicitante_apellido_paterno").show();
+                $("#content-id_solicitante_apellido_materno").show();
+                $("#content-id_solicitante_estado_civil").show();
+                $("#content-id_solicitante_correo").show();
+                $("#content-id_solicitante_celular").show();
+                $("#content-id_solicitante_parentesco").show();
+                $("#content-id_solicitante_direccion").show();
+                $("#content-id_solicitante_departamento_name").show();
+                $("#content-id_solicitante_provincia_name").show();
+                $("#content-id_solicitante_distrito_name").show();
+                $("#content-id_fallecido_parentesco").show();
+                $("#no_covid").show();
+                $("#label_no_covid").show();
+            }
+
+            $("#id_solicitante_numero_documento").prop('required', required);
+            $("#id_solicitante_nombres").prop('required', required);
+            $("#id_solicitante_apellido_paterno").prop('required', required);
+            $("#id_solicitante_apellido_materno").prop('required', required);
+            $("#id_solicitante_estado_civil").prop('required', required);
+            $("#id_solicitante_celular").prop('required', required);
+            $("#id_solicitante_parentesco").prop('required', required);
+            $("#id_solicitante_direccion").prop('required', required);
+            $("#id_solicitante_departamento_name").prop('required', required);
+            $("#id_solicitante_provincia_name").prop('required', required);
+            $("#id_solicitante_distrito_name").prop('required', required);
+            $("#id_fallecido_parentesco").prop('required', required);
+
+
+        }
+
+
+        $("#id_fallecido_tipo_documento option[value='5']").remove();
+
+        {#----------------#}
+
+        $('#id_fallecido_parentesco').empty();
+        $('#id_fallecido_parentesco').append($('<option>', {
+            value: '',
+            text: '-- --'
+        }));
+
+        $("#id_solicitante_parentesco option[value='8']").remove();
+        $("#id_solicitante_tipo_documento option[value='4']").remove();
+        $("#id_solicitante_tipo_documento option[value='8']").remove();
+
+
+        let get_options = (val) => {
+
+            let options_list = [[1, 'Madre'], [2, 'Padre'], [3, 'Hijo'], [4, 'Hija'], [5, 'Hermano'], [6, 'Hermana'],
+                [7, 'Cónyuge'], [8, 'Óbito fetal'],
+                [9, 'Abuelo'], [10, 'Abuela'],
+                [11, 'Tío'], [12, 'Tía'],
+                [13, 'Nieto'], [14, 'Nieta'],
+                [15, 'Sobrino'], [16, 'Sobrina'],
+                [17, 'Primo'], [18, 'Prima'],
+            ]
+
+            var option_array = options_list.slice(16, 18);
+            {#var option_array = options_list.slice(15, 16);#}
+            if (val <= 16) {
+                option_array = options_list.slice(10, 12);
+                if (val <= 14) {
+                    option_array = options_list.slice(8, 10);
+                    if (val <= 12) {
+                        option_array = options_list.slice(14, 16);
+                        if (val <= 10) {
+                            option_array = options_list.slice(12, 14);
+                            if (val <= 8) {
+                                option_array = [options_list[6]]
+                                if (val <= 6) {
+                                    option_array = options_list.slice(4, 6);
+                                    if (val <= 4) {
+                                        option_array = options_list.slice(0, 2);
+                                        if (val <= 2) {
+                                            option_array = options_list.slice(2, 4);
+                                            option_array.push(options_list[7]);
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
+            $('#id_fallecido_parentesco').empty();
+            option_array.forEach(function (item) {
+                $('#id_fallecido_parentesco').append($('<option>', {
+                    value: item[0],
+                    text: item[1]
+                }));
+            });
+
+            validImputs();
+        }
+
+        $(document).ready(function () {
+
+
+            if ($("#id_solicitante_tipo_documento").val()) {
+                datosSolicitanteValidacion(parseInt($("#id_solicitante_tipo_documento").val()));
+            } else {
+                datosSolicitanteValidacion(1);
+            }
+
+
+            if ($("#id_fallecido_tipo_documento").val()) {
+                datosFallecidoValidacion(parseInt($("#id_fallecido_tipo_documento").val()));
+            }
+
+
+            $("#id_solicitante_parentesco").change(function () {
+                var val = parseInt($(this).val());
+                get_options(val);
+            });
+
+
+            $("#id_fallecido_tipo_documento").change(function () {
+                var val = parseInt($(this).val());
+                datosFallecidoValidacion(val);
+            });
+
+            $("#id_solicitante_tipo_documento").change(function () {
+                var val = parseInt($(this).val());
+                datosSolicitanteValidacion(val);
+            });
+
+
+        });
+
+    </script>
+
+
+    {% if form.instance.pk %}
+
+
+
+
+
+{#        {% if form.instance.es_covid %}#}
+{#            <script type="application/javascript">#}
+{#                $(document).ready(function () {#}
+{#                    $("#id_numero_necropsia").prop('required', false);#}
+{#                    $("#id_fecha_necropsia").prop('required', false);#}
+{#                })#}
+{#            </script>#}
+{#        {% else %}#}
+{#            <script type="application/javascript">#}
+{#                $(document).ready(function () {#}
+{#                    $("#id_numero_necropsia").prop('required', true);#}
+{#                    $("#id_fecha_necropsia").prop('required', true);#}
+{##}
+{#                })#}
+{#            </script>#}
+{#        {% endif %}#}
+
+
+
+        {% if form.instance.estado_observado > 0 and form.instance.constancia_deposito %}
+            <script type="application/javascript">
+                $(document).ready(function () {
+                    $("#id_constancia_deposito").hide();
+                    $("#constancia_deposito-clear_id").hide();
+                    $('label[for="constancia_deposito-clear_id"]').hide();
+                })
+            </script>
+        {% endif %}
+
+        {% if form.instance.estado_observado > 0 and form.instance.archivo %}
+            <script type="application/javascript">
+                $(document).ready(function () {
+                    $("#id_archivo").hide();
+                    $("#archivo-clear_id").hide();
+                    $('label[for="archivo-clear_id"]').hide();
+                })
+            </script>
+        {% endif %}
+
+
+        {% if form.instance.solicitante_parentesco %}
+            <script type="application/javascript">
+                $(document).ready(function () {
+                    var id_parentesco_solicitante = {{  form.instance.solicitante_parentesco|safe }}
+                        get_options(id_parentesco_solicitante);
+                })
+            </script>
+        {% endif %}
+
+        {% if form.instance.fallecido_parentesco %}
+            <script type="application/javascript">
+                $(document).ready(function () {
+                    var id_fallecido_parentesco = {{  form.instance.fallecido_parentesco|safe }}
+                        $('#id_fallecido_parentesco').val(id_fallecido_parentesco);
+                })
+            </script>
+        {% endif %}
+
+
+
+
+        <script type="application/javascript">
+            $(document).ready(function () {
+
+
+                var id_fallecido_tipo_documento = {{  form.instance.fallecido_tipo_documento|safe }}
+                    datosFallecidoValidacion(id_fallecido_tipo_documento);
+
+
+                var id_solicitante_tipo_documento = {{  form.instance.solicitante_tipo_documento|safe }}
+                    datosSolicitanteValidacion(id_solicitante_tipo_documento);
+
+
+            });
+        </script>
+
+
+    {% else %}
+
+
+
+        {% if form.solicitante_parentesco.value %}
+            <script type="application/javascript">
+                $(document).ready(function () {
+                    var id_parentesco_solicitante = {{  form.solicitante_parentesco.value|safe }}
+                        get_options(id_parentesco_solicitante);
+                })
+            </script>
+        {% endif %}
+
+
+
+        <script type="application/javascript">
+            $(document).ready(function () {
+                $("#id_lugar_fallecimiento_preposicion_titulo").val("en el Hospital");
+            });
+        </script>
+
+    {% endif %}
+
+
+    <script type="application/javascript">
+
+        $(document).ready(function () {
+
+
+            $('#guardar-solicitud').on('click', function () {
+                $(".content-spinner").show();
+                if ($("#solicitud-form").valid()) {
+
+                    $("#solicitud-form").submit();
+                    $(".content-spinner").hide();
+
+                } else {
+                    $(".content-spinner").hide();
+                }
+            });
+
+
+        });
+    </script>
+
+
+
+    <script type="application/javascript">
+
+        $(function () {
+            $('#datetimepicker').datetimepicker({
+                format: 'LT'
+            });
+
+            $('#datetimepickercremacion').datetimepicker({
+                format: 'LT'
+            });
+
+            validContentHospital($("#id_lugar_fallecimiento_tipo").val());
+        });
+
+        $("#id_fallecido_hora_fallecimiento").keydown(function (event) {
+            return false;
+        });
+
+    </script>
+
+
+    {#  DATOS DEL SOLICITANTE   #}
+
+    <script type="application/javascript">
+
+
+        // Validar DNI Solicitante
+
+
+        $('#id_solicitante_tipo_documento').on('change', function () {
+            $("#id_solicitante_numero_documento").val("");
+            $("#id_solicitante_nombres").val("");
+            $("#id_solicitante_apellido_paterno").val("");
+            $("#id_solicitante_apellido_materno").val("");
+            $("#id_solicitante_direccion").val("");
+            $("#id_solicitante_departamento_name").val("");
+            $("#id_solicitante_provincia_name").val("");
+            $("#id_solicitante_distrito_name").val("");
+            $("#id_solicitante_estado_civil").val("");
+        });
+
+
+        $('#id_fallecido_tipo_documento').on('change', function () {
+            $("#id_fallecido_numero_documento").val("");
+            $("#id_fallecido_nombres").val("");
+            $("#id_fallecido_apellido_paterno").val("");
+            $("#id_fallecido_apellido_materno").val("");
+            $("#id_fallecido_sexo").val("");
+            $("#id_fallecido_fecha_nacimiento").val("");
+            $("#id_fallecido_estado_civil").val("");
+        });
+
+        var updateDniSolicitanteForm = (dni) => {
+            console.log("UpdateDni !! ");
+            $.ajax({
+                type: 'GET',
+                {#crossDomain: true,#}
+                dataType: 'json',
+                url: "/solicitud/validar-persona/" + dni,
+                data: {},
+                success: function (data) {
+
+
+                    if (data) {
+                        if (data.estado === true) {
+
+                            validImputs();
+
+
+                            $('#id_solicitante_nombres').val(data.persona.nombres);
+
+                            $('#id_solicitante_apellido_paterno').val(data.persona.apellido_paterno);
+
+
+                            if ("SIN DATOS" === data.persona.apelido_casado) {
+                                $('#id_solicitante_apellido_materno').val(data.persona.apellido_materno);
+                            } else {
+                                $('#id_solicitante_apellido_materno').val(data.persona.apellido_materno + " " + data.persona.apelido_casado);
+                            }
+
+
+                            $('#id_solicitante_numero_documento').val(data.persona.dni);
+                            $('#id_solicitante_estado_civil').val(data.persona.estado_civil);
+                            $('#id_solicitante_direccion').val(data.persona.direccion);
+
+                            $('#id_solicitante_departamento_name').val(data.persona.departamento_domicilio);
+                            $('#id_solicitante_provincia_name').val(data.persona.provincia_domicilio);
+                            $('#id_solicitante_distrito_name').val(data.persona.distrito_domicilio);
+
+                            $("#solicitante_validation_text").remove();
+                            $('label[for="id_solicitante_numero_documento"]').append(" <span id='solicitante_validation_text' class='badge badge-success text-bold-700' style='cursor: pointer;'> Encontrado </span>");
+                        } else {
+                            $("#solicitante_validation_text").remove();
+                            $('label[for="id_solicitante_numero_documento"]').append(" <span id='solicitante_validation_text' class='badge badge-warning text-bold-700' style='cursor: pointer;'>  No encontrado </span>");
+                        }
+                    }
+                }
+            });
+        };
+
+        $("#id_solicitante_numero_documento").keyup(function () {
+            console.log(" Key UP ");
+            const dni = $(this).val();
+            const tipo_documento = $("#id_solicitante_tipo_documento").val();
+
+            if (tipo_documento === "1") {
+
+
+                if (dni.length === 8) {
+                    $("#solicitante_validation_text").remove();
+                    $('label[for="id_solicitante_numero_documento"]').append(" <span id='solicitante_validation_text' class='badge badge-info text-bold-700' style='cursor: pointer;'> Validando... </span>");
+                    updateDniSolicitanteForm(dni);
+
+                } else {
+                    $("#solicitante_validation_text").remove();
+                    {#$('#id_solicitante_nombres').val("");#}
+                    {#$('#id_solicitante_apellido_paterno').val("");#}
+                    {#$('#id_solicitante_apellido_materno').val("");#}
+                }
+            }
+
+
+        });
+
+    </script>
+
+
+
+
+    {#  ########################## DATOS DEL FALLECIDO  #}
+
+    <script type="application/javascript">
+
+
+        // Validar DNI Fallecido
+
+        var updateDniFallecidoForm = (dni) => {
+            $.ajax({
+                type: 'GET',
+                {#crossDomain: true,#}
+                dataType: 'json',
+                url: "/solicitud/validar-persona/" + dni,
+                data: {},
+                success: function (data) {
+
+                    if (data) {
+                        if (data.estado === true) {
+                            validImputs();
+
+                            $('#id_fallecido_nombres').val(data.persona.nombres);
+                            $('#id_fallecido_apellido_paterno').val(data.persona.apellido_paterno);
+
+                            if (data.persona.apelido_casado === "SIN DATOS") {
+                                $('#id_fallecido_apellido_materno').val(data.persona.apellido_materno);
+                            } else {
+                                $('#id_fallecido_apellido_materno').val(data.persona.apellido_materno + " " + data.persona.apelido_casado);
+                            }
+
+                            $('#id_fallecido_numero_documento').val(data.persona.dni);
+                            $('#id_fallecido_sexo').val(data.persona.sexo);
+                            $('#id_fallecido_estado_civil').val(data.persona.estado_civil);
+
+                            var fn = data.persona.fecha_nacimiento.split("/");
+
+                            $('#id_fallecido_fecha_nacimiento').val(fn[2] + "-" + fn[1] + "-" + fn[0]);
+
+                            $(".fallecido_validation_text").remove();
+                            $('label[for="id_fallecido_numero_documento"]').append(" <span  class='fallecido_validation_text badge badge-success text-bold-700' style='cursor: pointer;'> Encontrado </span>");
+                        } else {
+                            $(".fallecido_validation_text").remove();
+                            $('label[for="id_fallecido_numero_documento"]').append(" <span  class='fallecido_validation_text badge badge-warning text-bold-700' style='cursor: pointer;'>  No encontrado </span>");
+                        }
+                    }
+                }
+            });
+        };
+
+        $("#id_fallecido_numero_documento").keyup(function () {
+            const dni = $(this).val();
+
+            var tipo_documento = $("#id_fallecido_tipo_documento").val();
+
+            if (tipo_documento === "1") {
+                if (dni.length === 8) {
+                    $(".fallecido_validation_text").remove();
+                    $('label[for="id_fallecido_numero_documento"]').append(" <span class='fallecido_validation_text badge badge-info text-bold-700' style='cursor: pointer;'> Validando... </span>");
+                    updateDniFallecidoForm(dni);
+                } else {
+                    $(".fallecido_validation_text").remove();
+                }
+            }
+        });
+
+
+        // Autocomplete hospitales
+
+        //--------------------------------------------- INICIO
+
+
+        $("#hospital").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'hospital:filter-json' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        $("#hospital_id").val(0);
+                        response(data);
+                        validImputs();
+                    },
+                    error: function (request, status, error) {
+                        {#alert(request.responseText);#}
+                        console.log(request.responseText);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function (event, ui) {
+                $("#hospital_id").val(ui.item.id);
+                $("#id_direccion_hospital").text(ui.item.direccion);
+                $("#id_departamento_hospital").val(ui.item.departamento);
+                $("#id_provincia_hospital").val(ui.item.provincia);
+                $("#id_distrito_hospital").val(ui.item.distrito);
+
+
+                {#log("Selected: " + ui.item.value + " aka " + ui.item.id);#}
+            }
+        });
+
+        var validContentHospital = (valor) => {
+
+            console.log(" Validando hospital !! ");
+            console.log(valor);
+
+
+            if (valor === '1') {
+                $('#hospital').prop('required', true);
+                $("#content-hospital").show();
+                $("#content-direccion_hospital").show()
+                $("#content-id_lugar_fallecimiento_direccion").hide()
+                $("#content-fallecido_distrito").hide()
+                $("#content-fallecido_provincia").hide()
+                $("#content-fallecido_departamento").hide()
+                $('#fallecido_distrito').prop('required', false);
+                $('#id_lugar_fallecimiento_direccion').prop('required', false);
+
+                $("#content-departamento_hospital").show()
+                $("#content-provincia_hospital").show()
+                $("#content-distrito_hospital").show()
+                {#$("#id_direccion_hospital").text("");#}
+                $("#id_lugar_fallecimiento_direccion").val("");
+
+
+            } else {
+                $("#hospital_id").val(0);
+                $("#hospital").val("");
+                $("#id_direccion_hospital").text("");
+
+                $('#hospital').prop('required', false);
+                $("#content-hospital").hide();
+                $("#content-direccion_hospital").hide()
+                $("#content-id_lugar_fallecimiento_direccion").show()
+                $("#content-fallecido_distrito").show()
+                $("#content-fallecido_provincia").show()
+                $("#content-fallecido_departamento").show()
+                $('#fallecido_distrito').prop('required', true);
+                $('#id_lugar_fallecimiento_direccion').prop('required', true);
+
+                $("#content-departamento_hospital").hide()
+                $("#content-provincia_hospital").hide()
+                $("#content-distrito_hospital").hide()
+
+
+                $("#id_departamento_hospital").val("");
+                $("#id_provincia_hospital").val("");
+                $("#id_distrito_hospital").val("");
+
+            }
+        }
+
+
+        $("#id_lugar_fallecimiento_tipo").change(function () {
+            let valor = $(this).val();
+            validContentHospital(valor);
+            {#alert("Handler for .change() called.");#}
+            console.log(" change tipo de lugar fallecimiento !! ");
+            console.log(valor);
+
+            if (valor === "1") {
+                $("#id_lugar_fallecimiento_preposicion_titulo").val("en el Hospital");
+            }
+            if (valor === "2") {
+                $("#id_lugar_fallecimiento_preposicion_titulo").val("en su Domicilio");
+            }
+
+            if (valor === "3") {
+                $("#id_lugar_fallecimiento_preposicion_titulo").val("en la Vía pública");
+            }
+
+            if (valor === "4") {
+                $("#id_lugar_fallecimiento_preposicion_titulo").val("en otro lugar");
+            }
+
+        });
+
+
+        $("#guardar-solicitud").mouseover(function () {
+            var tipo = $("#id_lugar_fallecimiento_tipo").val();
+            var value = $("#hospital_id").val();
+            if (tipo === "1") {
+                if (value === "0") {
+                    $("#hospital").val("");
+                }
+            }
+        });
+
+
+        // ----------------------------------------- FIN
+
+
+        //  --------------------------  INICIO, DISTRITO FALLECIMIENTO ---------------------->>>
+        function loadProvinceByDepartmentFallecido(department_id) {
+            $.ajax({
+                url: "{% url 'province:dropdown' %}",
+                data: {
+                    'department_id': department_id
+                },
+                success: function (data) {
+                    validImputs();
+                    $("#fallecido_provincia").html(data);
+                    if ($("#temp_province_state_fallecido").is(":checked")) {
+                        $('#fallecido_provincia [value="{{ fallecido_provincia.id }}"]').attr("selected", "selected")
+                        loadDistrictByProvinceFallecido("{{ fallecido_provincia.id }}");
+                    } else {
+                        loadDistrictByProvinceFallecido($("#fallecido_provincia option:selected").val());
+                    }
+                }
+            });
+        }
+
+        $("#fallecido_departamento").change(function () {
+            loadProvinceByDepartmentFallecido($(this).val());
+            $('#temp_province_state_fallecido').prop('checked', false);
+        });
+
+        // Management District
+
+        function loadDistrictByProvinceFallecido(province_id) {
+
+            $.ajax({
+                url: "{% url 'district:dropdown' %}",
+                data: {
+                    'province_id': province_id
+                },
+                success: function (data) {
+                    validImputs();
+                    $("#id_lugar_fallecimiento_distrito").html(data);
+                    if ($("#temp_province_state_fallecido").is(":checked")) {
+                        $('#id_lugar_fallecimiento_distrito [value="{{ fallecido_distrito.id }}"]').attr("selected", "selected")
+                    }
+                    updateDomicilioDistritoFallecido();
+                }
+            });
+        }
+
+        $("#fallecido_provincia").change(function () {
+            loadDistrictByProvinceFallecido($(this).val());
+        });
+
+        $("#id_lugar_fallecimiento_distrito").change(function () {
+            updateDomicilioDistritoFallecido();
+        });
+
+        var updateDomicilioDistritoFallecido = () => {
+            const district_id = $("#id_lugar_fallecimiento_distrito").val()
+            $("#id_lugar_fallecimiento_distrito").val(district_id);
+        };
+
+        function loadProvincesFallecido() {
+            const department = $("#fallecido_departamento option:selected").val()
+            loadProvinceByDepartmentFallecido(department);
+        }
+
+        loadProvincesFallecido();
+
+
+        //  --------------------------  FIN, DISTRITO FALLECIMIENTO ---------------------->>>
+
+
+    </script>
+
+
+
+    {#      --------------------------  Validar tipo de archivo ---------------------->>>#}
+    <script>
+
+        {#$('input[type="file"]').on('change', function () {#}
+        $('#id_archivo').on('change', function () {
+            var ext = $(this).val().split('.').pop();
+            if ($(this).val() !== '') {
+                if (ext === "pdf") {
+                    {#alert("La extensión es: " + ext);#}
+                    if ($(this)[0].files[0].size > 20048576) {
+                        {#console.log("El documento excede el tamaño máximo");#}
+
+                        $.notify({
+                            title: '¡Precaución!',
+                            message: 'El documento excede el tamaño máximo.'
+                        }, {
+                            type: 'danger'
+                        });
+
+                        $(this).val('');
+
+                    } else {
+                        $("#modalValid").hide();
+                    }
+                } else {
+                    $(this).val('');
+                    $.notify({
+                        title: '¡Precaución!',
+                        message: 'Extensión no permitida -> .' + ext
+                    }, {
+                        type: 'danger'
+                    });
+                    {#alert("Extensión no permitida: " + ext);#}
+                }
+            }
+        });
+
+        {#$('input[type="file"]').on('change', function () {#}
+        $('#id_constancia_deposito').on('change', function () {
+            var ext = $(this).val().split('.').pop();
+            if ($(this).val() !== '') {
+                if (ext === "pdf") {
+                    {#alert("La extensión es: " + ext);#}
+                    if ($(this)[0].files[0].size > 20048576) {
+                        {#console.log("El documento excede el tamaño máximo");#}
+
+                        $.notify({
+                            title: '¡Precaución!',
+                            message: 'El documento excede el tamaño máximo.'
+                        }, {
+                            type: 'danger'
+                        });
+
+                        $(this).val('');
+
+                    } else {
+                        $("#modalValid").hide();
+                    }
+                } else {
+                    $(this).val('');
+                    $.notify({
+                        title: '¡Precaución!',
+                        message: 'Extensión no permitida -> .' + ext
+                    }, {
+                        type: 'danger'
+                    });
+                    {#alert("Extensión no permitida: " + ext);#}
+                }
+            }
+        });
+
+
+    </script>
+
+
+
+    {% if hospital %}
+        <script>
+            $("#id_direccion_hospital").text("{{ hospital.direccion }}");
+            $("#id_departamento_hospital").val("{{ hospital.distrito.province.department.name }}");
+            $("#id_provincia_hospital").val("{{ hospital.distrito.province.name }}");
+            $("#id_distrito_hospital").val("{{ hospital.distrito.name }}");
+            $("#hospital_id").val("{{ hospital.id }}");
+        </script>
+    {% endif %}
+
+
+{% endblock static %}

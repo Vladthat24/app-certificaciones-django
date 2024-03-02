@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="CERTIFICACIONES - DIRIS LIMA SUR">
+    <meta name="author" content="DIRIS TI">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CQuicksand:300,400,500,700"
+          rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/vendors.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/app.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{% static 'img/favicon.ico' %}">
+
+
+    <script type="text/javascript">
+
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+
+    </script>
+
+</head>
+
+<body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click"
+      data-menu="vertical-menu" data-col="2-columns">
+<div id="app">
+    <div class="app-content content">
+        <div class="container">
+            <div class="row">
+                <div class="text-center">
+                    <h1>
+                        Solicitud Registrada correctamente !!
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'app-assets/vendors/js/vendors.min.js' %}"></script>
+<script>
+
+    if (location.href.indexOf('reload') === -1) {
+        location.href = location.href + '?reload';
+    }
+
+    jQuery(document).ready(function () {
+        setTimeout(function () {
+            location.href = '/solicitud/index-publico'
+        }, 4000);
+    });
+
+</script>
+</body>
+
+</html>
+
+
+

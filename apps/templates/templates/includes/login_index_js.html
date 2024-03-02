@@ -1,0 +1,63 @@
+{% load static %}
+
+
+<script src="{% static 'app-assets/vendors/js/vendors.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
+<!-- BEGIN VENDOR JS-->
+<!-- BEGIN PAGE VENDOR JS-->
+<!-- END PAGE VENDOR JS-->
+<!-- BEGIN MODERN JS-->
+<script src="{% static 'app-assets/js/core/app-menu.js' %} "></script>
+<script src="{% static 'app-assets/js/core/app.js' %} "></script>
+<script src="{% static 'js/bootstrap-notify.min.js' %} "></script>
+
+
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            $.notify({
+                title: '<strong>Mensaje: </strong>',
+                message: '{{ message|safe }}.'
+            }, {
+                type: '{{ message.tags }}'
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+
+<script type="application/javascript">
+    var updateDataForm = (dni) => {
+        $.ajax({
+            type: 'GET',
+            {#crossDomain: true,#}
+            dataType: 'json',
+            url: "/legajo/validar-persona/" + dni,
+            data: {},
+            success: function (data) {
+                if (data) {
+                    if (data.estado === true) {
+                        $('#id_nombres').val(data.persona.name);
+                        $('#id_apellido_paterno').val(data.persona.first_name);
+                        $('#id_apellido_materno').val(data.persona.last_name);
+                        $('#id_numero_documento').val(data.persona.dni);
+                    }
+                }
+            }
+        });
+    };
+
+    $("#dni").keyup(function () {
+        const dni = $(this).val();
+
+        if (dni.length === 8) {
+            updateDataForm(dni);
+        } else {
+            $('#id_nombres').val("");
+            $('#id_apellido_paterno').val("");
+            $('#id_apellido_materno').val("");
+
+        }
+    });
+
+</script>

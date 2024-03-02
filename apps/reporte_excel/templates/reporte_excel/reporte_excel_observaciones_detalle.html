@@ -1,0 +1,92 @@
+{% if object_list %}
+    <div class="table-responsive">
+
+        <a class="btn btn-success btn-sm mb-2"
+           href="{% url 'reporte-excel:generar-excel-observaciones' %}?fecha_inicio={{ fecha_inicio }}&fecha_final={{ fecha_final }}&tipo={{ tipo }}"
+           disabled="" id="generar">
+            <i class="la la-file-excel-o" style="font-size: 15px"></i> Generar Excel
+        </a>
+
+        <h2 class="text-info"> Cantidad de autorizaciones : <strong>{{ count }}</strong></h2>
+        <table class="table  mb-0">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Es Covid</th>
+                <th>N° Autorización</th>
+                <th>N° Expediente</th>
+                <th width="30">Fecha de recepción</th>
+                <th width="30">Solicitante</th>
+                <th width="30">Fallecido</th>
+                <th width="30">Dirección</th>
+                <th width="30">Diagnóstico</th>
+                <th width="30">Empresa (Crematorio)</th>
+                <th>Observaciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>
+                        {% if object.solicitud.es_covid %}
+                            SI
+                        {% else %}
+                            NO
+                        {% endif %}
+                    </td>
+                    <td>{{ object.certificacion.numero_autorizacion|default_if_none:"--" }}</td>
+                    <td>{{ object.numero_expediente|default_if_none:"--" }}</td>
+                    <td>{{ object.registrado_fecha|default_if_none:"--" }}</td>
+                    <td>{{ object.get_solicitante|default_if_none:"--" }}</td>
+                    <td>{{ object.get_fallecido|default_if_none:"--" }}</td>
+                    <td>{{ object.certificacion.fallecido_direccion }}</td>
+                    <td>{{ object.certificacion.motivo|default_if_none:"--" }}</td>
+                    <td>{{ object.crematorio|default_if_none:"--" }}</td>
+                    <td>
+                        {% for observacion in object.estados.all %}
+                            <div class="card"
+                                 style="box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2)!important; font-size: 12px!important;">
+                                <p style="margin-bottom: 1px !important;"><strong>{{ observacion.created_by }}</strong>
+                                </p>
+                                <p style="margin-bottom: 1px !important;"><u>{{ observacion.created_at }}</u></p>
+                                <p style="margin-bottom: 1px !important;" class="danger">
+                                    {{ observacion.observacion|default_if_none:"--" }}</p>
+                                <p style="margin-bottom: 1px !important;"><strong>{{ observacion.updated_by }}</strong>
+                                </p>
+                                <p style="margin-bottom: 1px !important;">
+                                    <u>{{ observacion.updated_at|default_if_none:"--" }}</u></p>
+                                <p style="margin-bottom: 1px !important;"
+                                   class="info">{{ observacion.descargo|default_if_none:"--" }}</p>
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% else %}
+    <div class="table-responsive text-center">
+        <h1 class="text-danger"> Sin Autorizaciones</h1>
+    </div>
+{% endif %}
+
+<script>
+    $("#generar").on('click', function () {
+        setTimeout(s => {
+            $("#generar").addClass("disabled");
+            $("#generar").text("Generando...")
+        }, 5)
+
+        setTimeout(s => {
+            $("#generar").removeClass("disabled");
+            $("#generar").text("Generar Excel")
+        }, 3000)
+
+    })
+</script>
+
+

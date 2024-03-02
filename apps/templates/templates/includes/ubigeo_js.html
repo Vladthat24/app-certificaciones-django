@@ -1,0 +1,146 @@
+<script type="application/javascript">
+
+    var id_district, id_department, id_province, id_country;
+
+    {%  if object.district %}
+        id_district = "{{ object.district.id }}";
+        id_province = "{{ object.district.province.id }}";
+        id_department = "{{ object.district.province.department.id }}";
+        id_country = "{{ object.district.province.department.country.id }}";
+    {%  endif %}
+
+    function loadDistricts(province_id) {
+        $.ajax({
+            url: "{% url 'province:district-dropdown-list' %}",
+            data: {
+                'province_id': province_id,
+            },
+            success: function (data) {
+                $("#id_district").html(data);
+                if ("{{ form.district.value }}") {
+                    $("#id_district").val(id_district);
+                }
+            }
+        });
+    }
+
+    function loadProvinces(deparment_id) {
+        $.ajax({
+            url: "{% url 'department:province-dropdown-list' %}",
+            data: {
+                'department_id': deparment_id,
+            },
+            success: function (data) {
+                $("#id_province").html(data);
+                if ("{{ form.district.value }}") {
+                    $("#id_province").val(id_province);
+                } else {
+                    loadDistricts($("#id_province").val());
+                }
+            }
+        });
+    }
+
+    function loadDepartments(country_id) {
+        $.ajax({
+            url: "{% url 'country:department-dropdown-list' %}",
+            data: {
+                'country_id': country_id,
+            },
+            success: function (data) {
+                $("#id_department").html(data);
+                if ("{{ form.district.value }}") {
+                    $("#id_department").val(id_department);
+                } else {
+                    loadProvinces($("#id_department").val());
+                }
+            }
+        });
+    }
+
+    function loadCountries() {
+        $.ajax({
+            url: "{% url 'country:dropdown-list' %}",
+            data: {},
+            success: function (data) {
+                $("#id_country").html(data);
+                if ("{{ form.district.value }}" != "None") {
+
+                    $("#id_country").val(id_country);
+                } else {
+                    $("#id_country").val(1);
+                    loadDepartments(1);
+                }
+            }
+        });
+    }
+
+    $("#id_country").change(function () {
+        loadDepartments($(this).val());
+    });
+
+    $("#id_department").change(function () {
+        loadProvinces($(this).val());
+    });
+
+    $("#id_province").change(function () {
+        loadDistricts($(this).val());
+    });
+
+
+    $(function () {
+        if ("{{ form.district.value }}" !== "None") {
+            {% if form.errors %}
+                $.ajax({
+                    url: "{% url 'district:get-json' pk=form.district.value  %}",
+                    data: {},
+                    success: function (data) {
+                        id_district = data.id;
+                        id_department = data.department_id;
+                        id_province = data.province_id;
+                        id_country = data.country_id;
+                        loadDistricts(data.province_id);
+                        loadProvinces(data.department_id);
+                        loadDepartments(data.country_id);
+                        loadCountries();
+                    }
+                });
+            {% else %}
+                loadDistricts("{{ object.district.province.id }}");
+                loadProvinces("{{ object.district.province.department.id }}");
+                loadDepartments("{{ object.district.province.department.country.id }}");
+                loadCountries();
+            {% endif %}
+
+
+        } else {
+            loadCountries();
+        }
+    });
+
+
+</script>
+
+
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <script>
+                $.notify({
+                    message: '{{ error|escape }}.'
+                }, {
+                    type: 'danger'
+                });
+            </script>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <script>
+            $.notify({
+                message: '{{ error|escape }}.'
+            }, {
+                type: 'danger'
+            });
+        </script>
+    {% endfor %}
+{% endif %}

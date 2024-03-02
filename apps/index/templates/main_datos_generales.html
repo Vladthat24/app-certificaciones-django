@@ -1,0 +1,90 @@
+{% extends 'dashboard.html' %}
+
+{% block  menu_datos_generales %}
+    active  open
+{% endblock %}
+
+
+{% block  container %}
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-12 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Actualizar datos generales</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="content-main">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="card">
+
+                                <div class="card-body collapse show">
+
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link {% block  nav_datos_pesonales_block %}{% endblock %}"
+                                               id="datos-personales-tab"
+                                               href="{% url 'legajo:postulante-update' %}"
+                                               aria-controls="home" aria-selected="true">Datos Personales</a>
+                                        </li>
+
+
+                                        <li class="nav-item">
+                                            <a class="nav-link
+                                                    {% block  nav_general_estado_civil_block %}{% endblock %}"
+                                               id="experiencia-laboral-tab"
+                                               href="{% url 'legajo:estado-civil-update' %}"
+                                               aria-controls="profile" aria-selected="false">Estado civil</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link
+                                                    {% block  nav_general_medio_contacto_block %}{% endblock %}"
+                                               id="experiencia-laboral-tab"
+                                               href="{% url 'legajo:medio-contacto-update' %}"
+                                               aria-controls="profile" aria-selected="false">Medio de contacto</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link {% block  nav_general_direccion_block %}{% endblock %}"
+                                               id="experiencia-laboral-tab"
+                                               href="{% url 'legajo:direccion-update' %}"
+                                               aria-controls="profile" aria-selected="false">Dirección</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link
+                                                    {% block  nav_general_datos_familiares_block %}{% endblock %}"
+                                               id="experiencia-laboral-tab"
+                                               href="{% url 'legajo:datos-familiares-list' %}"
+                                               aria-controls="profile" aria-selected="false">Datos familiares</a>
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="tab-content" id="myTabContent">
+
+                                        {% block  tabblock %}
+                                        {% endblock tabblock %}
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}

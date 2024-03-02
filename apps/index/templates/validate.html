@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main %}
+
+
+    <style>
+        .content-wrapper .nav-link {
+            background: #1e9ff214;
+            border: 1px solid #1e9ff2 !important;
+        }
+
+
+        .content-wrapper .nav-link:hover {
+            background: #fff !important;
+            border: 1px solid #0c5f94 !important;
+        }
+
+        .content-wrapper .nav-link.active {
+            background: #1e9ff2 !important;
+            color: #fff !important;
+            border: 1px solid #1e9ff2 !important;
+        }
+
+        .content-wrapper .tab-content {
+            border: 2px solid #1e9ef1 !important;
+        }
+
+
+        .avatar-online i {
+            background-color: #69f500 !important;
+        }
+
+        .avatar i {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+
+        .menu-float {
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+
+        .menu-float .list-group-item {
+            padding: 5px 20px;
+        }
+
+
+    </style>
+
+
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light bg-info navbar-shadow">
+        <div class="navbar-wrapper">
+
+            <div class="navbar-header">
+                <ul class="nav navbar-nav flex-row">
+                    <li class="nav-item mobile-menu d-md-none mr-auto"><a
+                            class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i
+                            class="ft-menu font-large-1"></i></a></li>
+                    <li class="nav-item"><a class="navbar-brand" href="{% url 'index:dashboard' %}"><img
+                            class="brand-logo"
+                            alt="modern admin logo"
+                            src="{% static 'img/peru.png' %}">
+                        <h3 class="brand-text">DIRIS LIMA SUR</h3></a></li>
+                    <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse"
+                                                      data-target="#navbar-mobile"><i class="la la-ellipsis-v"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-container content">
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+
+
+                    <div class="nav navbar-nav mr-auto ">
+                        <p style="
+                                background-color: #0c659e;
+                                color: #fff;
+                                margin-bottom: 0;
+                                {#margin-top: 10px;#}
+                                padding: 0 18px;
+                                box-shadow: 5px 5px 5px black;font-size: 13px;">
+
+                            <strong>Entidad: {{ request.session.entidad_nombre }} </strong>
+                            Código: {{ request.session.entidad_codigo }}, UGIPRESS = 10000122</p>
+
+                    </div>
+
+                    <div class="nav navbar-nav float-righ">
+
+                        <a class="dropdown-toggle nav-link dropdown-user-link"
+                           href=""><span class="mr-1">Hola,
+                            <span class="user-name text-bold-700">
+                                {% if request.session.user_full_name %}
+                                    {{ request.session.user_full_name }}
+                                {% else %}
+                                    {{ request.user.username }}
+                                {% endif %}
+                            </span></span>
+                            <span class="avatar avatar-online " style="width: 40px !important;">
+                                <img src="{% static 'img/avatar.png' %}" alt="avatar"
+                                     style="border: 1px solid #0918c3; background: #eab9b9;">
+                                <i class="la  "></i></span>
+
+                        </a>
+
+
+                        <ul class="list-group  menu-float">
+                            <a href="{% url 'password_change' %}" style="border: 1px solid #000;"
+                               class="list-group-item list-group-item-action text-white bg-warning">
+                                <i class="ft-anchor"></i>
+                                Cambiar contraseña
+                            </a>
+                            <a href="{% url 'index:logout' %}" style="border: 1px solid #000;"
+                               class="list-group-item list-group-item-action text-white bg-danger">
+                                <i class="ft-power"></i>
+                                Salir del sistema
+                            </a>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true">
+        <div class="text-center">
+        </div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                {% include "includes/menu.html" %}
+            </ul>
+
+        </div>
+    </div>
+
+
+
+    {% block  container %}
+        <div class="app-content content">
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12 mt-5">
+                        <div class="content-wrapper mt-5">
+                            <div class="content-body text-center">
+                                <h1>UPPS!! </h1>
+                                <h1><strong>OCURRIO UN PROBLEMA - VERIFIQUE SUS DATOS DE ACCESO</strong></h1>
+                                <p style="font-size: 150px!important;">☹️🤧</p>
+
+                                <h2>DIRIS LIMA SUR</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endblock container %}
+
+
+    <footer class="footer footer-static footer-light navbar-border navbar-shadow">
+        <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span
+                class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2021 <a
+                {#                                        class=" d-block d-md-inline-block">Copyright  &copy; 2020 <a#}
+                class="text-bold-800 grey darken-2" href="#" target="_blank"> </a>,
+                Todos los derechos reservados - DIRIS LIMA SUR. </span><span
+                class="float-md-right d-block d-md-inline-blockd-none d-lg-block">
+            <i class="ft-heart pink"></i></span>
+        </p>
+    </footer>
+
+{% endblock main %}
+

@@ -1,0 +1,48 @@
+<style>
+    .delete-row {
+        margin-top: 5%;
+        padding-left: 5%;
+    }
+</style>
+
+{% load widget_tweaks %}
+{% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+
+
+    {% if field.name in hidden %}
+        {% render_field field class="hide" hidden="hidden" %}
+    {% else %}
+
+        {% if field.label != "Eliminar" %}
+
+            {% if  field.field.widget.input_type == "select" %}
+                <div class="form-group col-md-10">
+            {% else %}
+                <div class="form-group col-md-5">
+            {% endif %}
+
+        {{ field.label_tag }}
+        {% if field.errors %}
+            {% render_field field class="form-control is-invalid" %}
+            {% for error in field.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% else %}
+            {% if  field.field.widget.input_type == "select" %}
+                {% render_field field class="form-control select-beast is-valid" %}
+            {% else %}
+                {% render_field field class="form-control is-valid " %}
+            {% endif %}
+        {% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
+
+
+{% endfor %}

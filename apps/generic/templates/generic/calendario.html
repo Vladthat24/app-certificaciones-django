@@ -1,0 +1,66 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+{% load render_bundle from webpack_loader %}
+
+
+
+{% block  container %}
+{#    {% render_bundle 'main' %}#}
+
+<link href="https://certificaciones-ui.dirislimasur.gob.pe/css/main.3e1f5049.css" rel="stylesheet">
+
+    <div id="app" class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Genérico</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">{{ title }}</h2>
+                            </div>
+                            <div class="card-body collapse show">
+
+                                <div class="row">
+                                    <div class="offset-2 col-md-8">
+                                        <App tipo="calendar" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    {% render_bundle 'main' %}#}
+
+
+{#    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#}
+{#{% render_bundle 'main' %}#}
+{#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#}
+{##}
+
+{% endblock container %}
+
+
+{% block static %}
+
+{#    <script type="text/javascript" src="http://0.0.0.0/js/main.js"></script>#}
+    <script type="text/javascript" src="https://certificaciones-ui.dirislimasur.gob.pe/js/main.6c59ebfd.js"></script>
+{% endblock %}

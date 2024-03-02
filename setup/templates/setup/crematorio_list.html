@@ -1,0 +1,109 @@
+{% extends 'dashboard.html' %}
+{% load paginator i18n %}
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Configuraciones</li>
+                                <li class="breadcrumb-item active">Crematorio</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-header-right col-md-6 col-12">
+                    <div class=" float-md-right">
+                        <div class="col-sm-12 col-lg-12 col-xl-12">
+                            <a href="{% url 'crematorio:new' %}" class="btn btn-success btn-block btn-sm">
+                                <i class="la la-plus  font-small-2"></i>Nuevo Crematorio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}
+                                        <strong class="text-primary">({{ page_obj.paginator.count }})</strong></h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <div class="row">
+                                        <div class="col-md-2 " hidden>
+                                            {% include 'genericfilters/filter_list.html' %}
+                                        </div>
+                                        <div class="col-md-12">
+                                            {% trans "Nombres " as placeholder %}
+                                            {% include 'genericfilters/query_filter.html' %}
+                                            <div class="table-responsive">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered patients-list">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Nombre</th>
+                                                            <th>Dirección</th>
+                                                            <th>Distrito</th>
+                                                            <th>Estado</th>
+                                                            <th>Opc.</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        {% for object in object_list %}
+                                                            <tr>
+                                                                <th>{{ forloop.counter0|add:page_obj.start_index }}</th>
+                                                                <td>{{ object.nombre }}</td>
+                                                                <td>{{ object.direccion }}</td>
+                                                                <td>
+                                                                    {{ object.distrito.province.department.name }} -
+                                                                    {{ object.distrito.province.name }} -
+                                                                    {{ object.distrito.name }}</td>
+                                                                <td>
+                                                                    {% if object.estado %}
+                                                                        <span class="badge badge-success">ACTIVO</span>
+                                                                    {% else %}
+                                                                        <span class="badge badge-danger">DESACTIVO</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td class="text-right">
+                                                                    <a href="{% url 'crematorio:edit' object.id %}"
+                                                                       class="btn btn-warning btn-sm"
+                                                                       data-toggle="tooltip" data-placement="top"
+                                                                       title="Editar Crematorio">
+                                                                        <i class="ft ft-edit font-medium-2 "> </i>
+                                                                    </a>
+
+                                                                </th>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                {% paginator %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+{% endblock static %}

@@ -1,0 +1,390 @@
+{% extends 'dashboard.html' %}
+{% load  paginator i18n static %}
+{% block  container %}
+    <style>
+        @media all and (max-width: 800px) {
+            .leyenda h4 {
+                font-size: 8px !important;
+            }
+        }
+    </style>
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Solicitud</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                {% if group == 1 %}
+                    <div class="content-header-right col-md-6 col-12">
+                        <div class=" float-md-right">
+                            <div class="col-sm-12 col-lg-12 col-xl-12">
+                                <a href="{% url 'solicitud:new' %}" class="btn btn-success btn-sm btn-block">
+                                    <i class="la la-plus font-small-2"></i> Nueva solicitud</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}
+                                        <strong class="text-primary">({{ page_obj.paginator.count }})</strong></h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <div class="row">
+
+                                        {% if group == 1 %}
+                                            <div class="col-md-12 float-right">
+                                                <table class="table leyenda">
+                                                    <tr>
+                                                        <td><h4>LEYENDA: </h4></td>
+                                                        <td style="background-color: #e65100; width: 180px;"
+                                                            class="text-white">
+                                                            <h4 class="text-white">CREMATORIO</h4>
+                                                        </td>
+                                                        <td style="background-color: #ffd600; width: 180px;"
+                                                            class="text-white">
+                                                            <h4>TESORERÍA</h4>
+                                                        </td>
+                                                        <td style="background-color: #0277bd; width:180px;"
+                                                            class="text-white">
+                                                            <h4 class="text-white"> MESA DE PARTES</h4>
+                                                        </td>
+                                                        <td style="background-color: #64dd17; width: 180px;"
+                                                            class="text-white">
+                                                            <h4>DSAIA</h4>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        {% endif %}
+
+
+
+                                        <div class="col-md-2">
+                                            {% include 'genericfilters/filter_list.html' %}
+                                        </div>
+                                        <div class="col-md-10">
+                                            {% trans "Buscar" as placeholder %}
+                                            {% include 'genericfilters/query_filter.html' %}
+                                            <div class="table-responsive">
+                                                {% paginator %}
+                                            </div>
+                                            <div class="table-responsive">
+                                                {% include "includes/list_table_solicitudes.html" %}
+                                            </div>
+                                            {% paginator %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="expedienteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="solicitud-form" class="was-validated form-validate"
+                      enctype="multipart/form-data" method="POST"
+                      action="{% url  'solicitud:aprobar-solicitud-tesoreria' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="col-md-12 ">
+                                <input name="solicitud_id" class="solicitud_id" hidden>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <h3 class="text-info ">Se confirma que la constancia de depósito es
+                                    correcta </h3>
+
+                                <div class="content-descarga-constancia-none">
+                                    <h4 class="text-danger">No se subió la constancia</h4>
+                                </div>
+                                <div class="content-descarga-constancia mb-2">
+                                    <a href="" target="_blank" class="btn btn-info btn-sm"
+                                       id="descarga-constancia">
+                                        <i class="la la-download"></i> Descargar constancia</a>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <label for="nro_secuencia">Nro Secuencia:</label>
+                                                <div class="form-group ">
+                                                    <input type="text" name="" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="codigo_caja">Código de caja:</label>
+                                                <div class="form-group ">
+                                                    <input type="text" name="" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="fecha_movimiento">Fecha de movimiento:</label>
+                                                <div class="form-group ">
+                                                    <input type="date" name="" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div id="myGroup" style="border: 2px solid #0ba076">
+                                                    <a class=" btn btn-warning dropdown text-white btn-sm"
+                                                       data-toggle="collapse"
+                                                       data-target="#pagoUno">
+                                                        <i class="icon-chevron-right"></i> Págalo.pe
+                                                    </a>
+                                                    <a class="btn btn-warning dropdown text-white btn-sm"
+                                                       data-toggle="collapse"
+                                                       data-target="#pagoDos">
+                                                        <i class="icon-chevron-right"></i> Cajero Multired
+                                                    </a>
+                                                    <a class="btn btn-warning dropdown text-white btn-sm"
+                                                       data-toggle="collapse"
+                                                       data-target="#pagoTres">
+                                                        <i class="icon-chevron-right"></i> Agencia Banco de la Nación
+                                                    </a>
+
+                                                    <div class="accordion-group">
+                                                        <div class="collapse indent show" id="pagoUno"
+                                                             data-parent="#myGroup">
+                                                            <img src="{% static 'img/pago__1.jpeg' %}" alt="logo"
+                                                                 width="300"
+                                                                 class="img-fluid">
+                                                        </div>
+
+                                                        <div class="collapse indent" id="pagoDos"
+                                                             data-parent="#myGroup">
+                                                            <img src="{% static 'img/pago__2.jpeg' %}" alt="logo"
+                                                                 width="300"
+                                                                 class="img-fluid">
+                                                        </div>
+
+                                                        <div class="collapse" id="pagoTres" data-parent="#myGroup">
+                                                            <img src="{% static 'img/pago__3.jpeg' %}" alt="logo"
+                                                                 width="300"
+                                                                 class="img-fluid">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Seguir revisando
+                        </button>
+                        <button type="submit"
+                                class="btn btn-success form-button btnSubmit content-descarga-constancia">
+                            Confirmar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="numeroExpedienteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Número de expediente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formSolicitudNumeroExpediente" class="was-validated form-validate"
+                          enctype="multipart/form-data" method="POST"
+                          action="{% url  'solicitud:save-nro-expediente' %}">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-md-12 mb-1 mt-1">
+                                <input name="solicitud_id" class="solicitud_id" hidden>
+                            </div>
+                            <div class="col-md-12" id="content-nro_expediente">
+                                <label for="nro_expediente">Nro Expediente:</label>
+                                <div class="form-group ">
+                                    <input type="text" name="nro_expediente" value=""
+                                           maxlength="50" class="form-control"
+                                           required="" id="nro_expediente">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success form-button btnSubmit">
+                            Guardar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal fade" id="guardarEscaneadoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveModalLabel">Solicitud</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="conent-escaneado">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="eliminarEscaneadoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Solicitud</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="text-left was-validated form-validate" method="POST"
+                      enctype="multipart/form-data" autocomplete="off"
+                      action="{% url 'solicitud:eliminar-escaneado' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <input class="solicitud_id" name="solicitud_id" hidden/>
+                            <h1 class="text-danger">¿ Desea eliminar el archivo escaneado ?</h1>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include "includes/form_observacion.html" %}
+
+{% endblock container %}
+
+{% block static %}
+
+    <script>
+        $('#eliminarEscaneadoModal').on('shown.bs.modal', function (e) {
+            var solicitudId = $(e.relatedTarget).data('pk');
+            $(".solicitud_id").val(solicitudId);
+
+        });
+
+        $('#guardarEscaneadoModal').on('shown.bs.modal', function (e) {
+            var solicitudId = $(e.relatedTarget).data('pk');
+            save_form_show(solicitudId);
+        });
+
+        var save_form_show = (solicitud_id) => {
+            $.ajax({
+                url: "{% url 'solicitud:guardar-escaneado' %}",
+                data: {
+                    solicitud_id: solicitud_id
+                },
+                success: function (data) {
+                    $("#conent-escaneado").html(data);
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+
+        $('#expedienteModal').on('show.bs.modal', function (e) {
+            var solicitud_id = $(e.relatedTarget).data('solicitud_id');
+            var solicitud_constancia = $(e.relatedTarget).data('solicitud_constancia_deposito');
+            var constancia_deposito = "/media/" + solicitud_constancia;
+
+            if (solicitud_constancia.length === 0) {
+                $(".content-descarga-constancia-none").show()
+                $(".content-descarga-constancia").hide()
+            } else {
+                $(".content-descarga-constancia-none").hide()
+                $(".content-descarga-constancia").show()
+            }
+            $(".solicitud_id").val(solicitud_id);
+            $("#descarga-constancia").attr("href", constancia_deposito)
+        });
+
+        $('#numeroExpedienteModal').on('show.bs.modal', function (e) {
+            var solicitud_id = $(e.relatedTarget).data('solicitud_id');
+            $(".solicitud_id").val(solicitud_id);
+
+        });
+
+        $("#formSolicitudNumeroExpediente").submit(function (e) {
+            var nro_expediente = $("#nro_expediente").val();
+            if (nro_expediente.length < 12 || nro_expediente.search("/") >= 0) {
+                $.notify({
+                    title: '¡Precaución!',
+                    message: 'Ingrese un Nro de expediente válido'
+                }, {
+                    type: 'danger'
+                });
+                e.preventDefault();
+            } else {
+                console.log("sdsd");
+                $("#formSolicitudNumeroExpediente").submit();
+            }
+        });
+
+    </script>
+
+
+    <script src="{% static 'js/includes/form_observacion_script.js' %} "></script>
+{% endblock static %}

@@ -1,0 +1,164 @@
+{% extends 'dashboard.html' %}
+
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Configuraciones</li>
+                                <li class="breadcrumb-item active">Crematorio</li>
+                                <li class="breadcrumb-item ">
+                                    <a href="{% url 'crematorio:list' %}">Todos los crematorios</a></li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section id="patients-list">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">{{ title }}</h2>
+                                </div>
+                                <div class="card-body collapse show">
+                                    <form class="text-left was-validated form-validate" method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="col-md-3 form-group" id="content-departamento">
+                                                <label for="name"> Departamento</label>
+                                                <span class="danger">*</span>
+                                                <select name="departamento"
+                                                        id="departamento"
+                                                        class="form-control"
+                                                        data-msg="Seleccione un departamento." type="number"
+                                                        required>
+                                                    {% for d in departments %}
+                                                        <option value="{{ d.id }}"
+                                                                {% if d.id == departamento.id %}
+                                                                selected
+                                                                {% endif %}>
+                                                            {{ d.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 form-group" id="content-_provincia">
+                                                <label for="name"> Provincia</label>
+                                                <span class="danger">*</span>
+                                                <select name="provincia" id="provincia"
+                                                        class="form-control"
+                                                        data-msg="Seleccione una provincia" type="number"
+                                                        required>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 form-group" id="content-fallecido_distrito">
+                                                <label for="id_distrito"> Distrito</label>
+                                                <span class="danger">*</span>
+                                                <select name="distrito"
+                                                        id="id_distrito"
+                                                        class="form-control"
+                                                        data-msg="Seleccione un distrito" type="number"
+                                                        required>
+                                                </select>
+                                            </div>
+
+                                            {% include 'includes/bs4_form.html' with form=form col=3 exclude='distrito' start_tabindex="1" hidden="" include="" %}
+
+
+                                            <input name="temp_province_state" type="checkbox"
+                                                   id="temp_province_state"
+                                                   hidden
+                                                    {% if provincia %}
+                                                   checked
+                                                    {% endif %}>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="text-right">
+                                                <a type="button" href="{% url 'crematorio:list' %}"
+                                                   class="btn  btn-danger form-button">Cancelar</a>
+                                                <button type="submit" class="btn btn-success form-button btnSubmit">
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+        //  --------------------------  INICIO, DISTRITO FALLECIMIENTO ---------------------->>>
+        function loadProvinceByDepartment(department_id) {
+            $.ajax({
+                url: "{% url 'province:dropdown' %}",
+                data: {
+                    'department_id': department_id
+                },
+                success: function (data) {
+                    $("#provincia").html(data);
+                    if ($("#temp_province_state").is(":checked")) {
+                        $('#provincia [value="{{ provincia.id }}"]').attr("selected", "selected")
+                        loadDistrictByProvince("{{ provincia.id }}");
+                    } else {
+                        loadDistrictByProvince($("#provincia option:selected").val());
+                    }
+                }
+            });
+        }
+
+        $("#departamento").change(function () {
+            loadProvinceByDepartment($(this).val());
+            $('#temp_province_state').prop('checked', false);
+        });
+
+        // Management District
+
+        function loadDistrictByProvince(province_id) {
+            $.ajax({
+                url: "{% url 'district:dropdown' %}",
+                data: {
+                    'province_id': province_id
+                },
+                success: function (data) {
+                    $("#id_distrito").html(data);
+                    if ($("#temp_province_state").is(":checked")) {
+                        $('#id_distrito [value="{{ distrito.id }}"]').attr("selected", "selected")
+                    }
+                }
+            });
+        }
+
+        $("#provincia").change(function () {
+            loadDistrictByProvince($(this).val());
+        });
+
+
+        function loadProvinces() {
+            const department = $("#departamento option:selected").val()
+            loadProvinceByDepartment(department);
+        }
+
+        loadProvinces();
+
+
+        //  --------------------------  FIN, DISTRITO FALLECIMIENTO ---------------------->>>
+    </script>
+
+{% endblock static %}

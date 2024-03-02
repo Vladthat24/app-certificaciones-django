@@ -1,0 +1,25 @@
+{% if type == 'file' %}
+    <div class="form-group col-xl-{{ col }} col-md-12">
+        <label for="id_{{ name }}">Archivo (Max. 1MB):
+        </label>
+        <input type='file' id="id_{{ name }}" name="{{ name }}"/>
+        <div class="invalid-feedback">
+            {{ form.file.errors }}
+        </div>
+    </div>
+{% else %}
+    <div class="form-group col-xl-{{ col }} col-md-{{ col }}">
+        <label for="id_{{ name }}">Foto (Max. 1MB): <img id="photo"
+                {% if input.value %}
+                                                         src="{{ MEDIA_URL }}{{ input.value }}"
+                {% else %}
+                                                         src="{{ MEDIA_URL }}{{ url_default }}"
+                {% endif %}
+                                                         alt="foto" width="100"
+                                                         style="border: 1px solid #28d094;"/></label>
+        <input type='file' id="id_{{ name }}" name="{{ name }}" onchange="readURL(this);"/>
+        <div class="invalid-feedback">
+            {{ form.photo.errors }}
+        </div>
+    </div>
+{% endif %}

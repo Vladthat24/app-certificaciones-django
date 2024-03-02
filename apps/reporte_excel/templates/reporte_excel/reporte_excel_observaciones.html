@@ -1,0 +1,178 @@
+{% extends 'dashboard.html' %}
+{% block  container %}
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item ">Reportes</li>
+                                <li class="breadcrumb-item active">{{ title }}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">{{ title }}</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-md-center">
+                                <div class="card" style="margin-bottom: 0 !important;">
+                                    <div class="card-content collapse show">
+                                        <div class="card-body"
+                                             style="padding-top: 0 !important; margin-bottom: 0 !important;     padding-bottom: 0 !important;">
+                                            <form class="form" method="post" role="form"
+                                                  action="{% url 'reporte-excel:reporte-excel-observaciones-form' %}">
+                                                {% csrf_token %}
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-10">
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label class="" for="tipo">Tipo</label>
+                                                                <div class="form-group">
+                                                                    <select class="form-control" id="tipo" name="tipo">
+                                                                        <option value="1">TODO</option>
+                                                                        <option value="2">COVID</option>
+                                                                        <option value="3">NO COVID</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label class=""
+                                                                       for="fecha_inicio">Fecha inicio</label>
+                                                                <div class="form-group">
+                                                                    <input type="date" name="fecha_inicio"
+                                                                           class="form-control " tabindex="1"
+                                                                           required="" id="fecha_inicio">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label class=""
+                                                                       for="fecha_final">Fecha final</label>
+                                                                <div class="form-group">
+                                                                    <input type="date" name="fecha_final"
+                                                                           class="form-control " tabindex="2"
+                                                                           required="" id="fecha_final">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-primary"
+                                                                    id="buscar">
+                                                                <i class="la la-search"></i> BUSCAR
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body" id="content-report">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+
+        $(document).on('click', 'form button[type=submit]', function (e) {
+
+            {#var isValid = $(e.target).parents('form').validate();#}
+
+            if (!$(e.target).parents('form').is(':invalid')) {
+
+                let fecha1 = new Date($("#fecha_inicio").val());
+                let fecha2 = new Date($("#fecha_final").val());
+
+
+                let resta = fecha2.getTime() - fecha1.getTime()
+                let diferencia = Math.round(resta / (1000 * 60 * 60 * 24))
+
+                console.log(" Formulario validado !!! ");
+                console.log(diferencia);
+                if (diferencia >= 0) {
+
+
+                } else {
+                    $.notify({
+                        // options
+                        title: 'ERROR, ',
+                        message: 'La fecha de inicio no puede ser mayor a la fecha final.'
+                    }, {
+                        // settings
+                        type: 'danger'
+                    });
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: $(e.target).parents('form').attr('action'),
+                    data: $(e.target).parents('form').serialize(),
+                    success: function (response) {
+                        console.log(" SUCESS XD XD XD");
+                        console.log(response);
+                        $("#content-report").html(response)
+                        $.notify({
+                            // options
+                            title: '',
+                            message: 'Consulta realizada exitosamente'
+                        }, {
+                            // settings
+                            type: 'success'
+                        });
+                    },
+                    error: function (request, status, error) {
+                        console.log(" Error ");
+                        $.notify({
+                            // options
+                            title: 'ERROR, ',
+                            message: 'Error del servidor.'
+                        }, {
+                            // settings
+                            type: 'danger'
+                        });
+                    }
+                });
+
+                {#e.preventDefault(); //prevent the default action#}
+            } else {
+                $.notify({
+                    // options
+                    title: 'ERROR, ',
+                    message: 'Ingrese las fechas correctamente'
+                }, {
+                    // settings
+                    type: 'danger'
+                });
+            }
+            return false;
+
+        });
+
+
+    </script>
+
+{% endblock static %}

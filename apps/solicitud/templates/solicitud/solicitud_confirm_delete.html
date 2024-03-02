@@ -1,0 +1,35 @@
+{% extends 'dashboard.html' %}
+
+{% block  container %}
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-6 col-12 mb-2">
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="card text-white bg-danger mb-3" style="margin: 50px">
+                    <div class="card-body text-center">
+                        <form method="post">{% csrf_token %}
+                            <p> Está seguro que desea eliminar la solicitud del fallecido:
+                                <strong>"{{ object.get_fallecido }}"</strong>?
+                            </p>
+                            <button type="button" class="btn btn-default" id="cancel">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Confirmar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock container %}
+
+{% block static %}
+
+    <script type="application/javascript">
+        $('#cancel').click(function () {
+            parent.history.back();
+            return false;
+        });
+    </script>
+{% endblock static %}
